@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Bullets & Interview Defense — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  <h1>TicketIQ — Resume Bullets &amp; Interview Defense Guide</h1>
+<p>This guide provides interview-ready resume bullet points formatted according to Google's <strong>XYZ formula</strong> (<em>Accomplished [X], as measured by [Y], by doing [Z]</em>), complete with realistic metric placeholders and an interview defense cheat-sheet.</p>
+<hr />
+<h2>1. Google XYZ Resume Bullets</h2>
+<h3>Variant 1: General Software Engineer / Backend Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — AI IT-Helpdesk Triage &amp; Resolution Platform</strong><br />
+- Architected a high-throughput IT service desk backend in <strong>FastAPI</strong> and <strong>PostgreSQL (pgvector)</strong>, reducing ticket resolution turnaround by <strong>[60%]</strong> through automated auto-triage and semantic duplicate detection.<br />
+- Implemented role-based access control (<strong>JWT / RBAC</strong>) across user, agent, and admin tiers; constructed a complete <strong>Pytest</strong> automated testing suite achieving <strong>[92%]</strong> code coverage across auth, CRUD, and ML inference pipelines.<br />
+- Optimized database vector queries using <strong>HNSW indexing</strong> on <strong>384-dimensional</strong> sentence embeddings, sustaining <strong>[&lt;100 ms]</strong> retrieval latency across <strong>[5,000+]</strong> historical support records on Supabase.<br />
+- Containerized the backend with multi-stage <strong>Docker</strong> builds and deployed on <strong>Render</strong> with connection pooling (PgBouncer), eliminating cold-start model download overhead.</p>
+</blockquote>
+<hr />
+<h3>Variant 2: Applied Machine Learning / Triage Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — Intelligent Ticket Classification &amp; Routing System</strong><br />
+- Developed an explainable multi-class text classification pipeline in <strong>Scikit-Learn</strong> predicting IT ticket category and priority, improving baseline TF-IDF performance by <strong>[+14%]</strong> to achieve <strong>[81%] Category Macro-F1</strong> and <strong>[71%] Priority Macro-F1</strong>.<br />
+- Extracted semantic representations using pretrained <strong>all-MiniLM-L6-v2</strong> sentence transformers and trained balanced <strong>Logistic Regression</strong> classifiers, mitigating heavy 70:1 class imbalance using inverse-frequency loss weighting.<br />
+- Formulated an offline evaluation benchmark on a <strong>100-ticket held-out set</strong>, validating a <strong>[86%] Hit@3</strong> duplicate retrieval rate using cosine similarity over dense vector embeddings.<br />
+- Serialized trained models via <strong>Joblib</strong> and engineered an in-memory caching layer, delivering single-ticket inference in <strong>[&lt;25 ms]</strong> on CPU.</p>
+</blockquote>
+<hr />
+<h3>Variant 3: RAG &amp; Generative AI Systems Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — Grounded RAG IT Resolution Assistant</strong><br />
+- Designed a grounded <strong>Retrieval-Augmented Generation (RAG)</strong> pipeline using <strong>LangChain</strong> and <strong>Google Gemini 1.5 Flash</strong>, synthesizing verified step-by-step IT troubleshooting guidance from historical resolutions in <strong>[&lt;2.2 s]</strong>.<br />
+- Enforced strict hallucination guardrails via cosine similarity thresholding (<strong>threshold = 0.65</strong>) and <strong>Pydantic structured output parsing</strong>, guaranteeing validated JSON schema responses with cited source ticket IDs.<br />
+- Integrated vector search directly into relational PostgreSQL via <strong>pgvector</strong>, unifying relational ticket metadata with dense vector embeddings into a single ACID-compliant database architecture.</p>
+</blockquote>
+<hr />
+<h3>Variant 4: Full-Stack / End-to-End Product Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — End-to-End AI Helpdesk Web Application</strong><br />
+- Engineered an end-to-end IT support suite comprising a <strong>FastAPI</strong> microservice, <strong>PostgreSQL/pgvector</strong> storage, and a responsive <strong>Flutter Web</strong> agent dashboard.<br />
+- Integrated real-time AI triage badges, similar ticket recommendation drawers, and a one-click resolution applicator, enabling support agents to review and accept AI-generated fixes in one action.<br />
+- Deployed the production system to <strong>Render</strong> and <strong>Supabase</strong>, ensuring resilient continuous integration through automated end-to-end tests and zero CORS latency.</p>
+</blockquote>
+<hr />
+<h2>2. Interview Defense Cheat-Sheet (High-Yield Q&amp;A)</h2>
+<p>Here are the 5 questions interviewers will ask about this project, along with exact, mathematically defensible answers tailored to your background.</p>
+<hr />
+<h3>Q1: "Why did you use Logistic Regression with sentence embeddings instead of fine-tuning a BERT model or calling an LLM for classification?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"I deliberately chose Logistic Regression on top of frozen sentence embeddings (<code>all-MiniLM-L6-v2</code>) for three engineering reasons:</em><br />
+1. <strong><em>Inference Latency &amp; Cost</em></strong>: <em>Calling an LLM for triage adds 1–2 seconds of network latency and token costs per ticket. A Logistic Regression model runs in under 25 milliseconds directly on CPU with zero API costs.</em><br />
+2. <strong><em>Explainability &amp; Probabilities</em></strong>: <em>Logistic Regression outputs well-calibrated class probability distributions via the Softmax function. This allows our backend to assign confidence scores to predictions and flag low-confidence tickets for manual agent review.</em><br />
+3. <strong><em>Sample Efficiency &amp; Defense</em></strong>: <em>Fine-tuning a full transformer with limited IT helpdesk data easily leads to overfitting. Using a high-quality pretrained sentence encoder as a fixed feature extractor and fitting a convex loss function (cross-entropy with L2 regularization) guaranteed fast convergence, explainable decision boundaries, and no GPU requirements.</em>"</p>
+</blockquote>
+<hr />
+<h3>Q2: "How did you handle the severe class imbalance in ticket priorities?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"Priority distribution in helpdesk logs is naturally skewed—Low and Medium tickets account for over 85% of samples, while Critical tickets are under 3%. If you optimize for standard accuracy, a trivial model predicting 'Low' achieves high accuracy while failing completely on critical outages.</em><br />
+<em>I addressed this systematically:</em><br />
+1. <em>I used <strong>Stratified Splitting</strong> (<code>StratifiedShuffleSplit</code>) to ensure both train and test partitions reflected the true distribution.</em><br />
+2. <em>I configured <strong>balanced class weighting</strong> in the Logistic Regression cost function. This weights the cross-entropy loss inversely proportional to class frequencies: (w_j = \frac{N}{K \cdot n_j}). Penalizing errors on minority classes heavily during gradient descent prevented the decision boundaries from collapsing toward the majority class.</em><br />
+3. <em>I evaluated the model using <strong>Macro-averaged F1</strong> rather than accuracy or Micro-F1, giving equal importance to Critical and Low classes.</em>"</p>
+</blockquote>
+<hr />
+<h3>Q3: "Why did you store embeddings in PostgreSQL with pgvector instead of using a standalone vector DB like Pinecone, Chroma, or Weaviate?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"In a production IT helpdesk system, tickets are relational entities with foreign keys (requesters, assignees), audit logs, and strict state transitions (Open (\to) In Progress (\to) Resolved).</em><br />
+<em>Using a dedicated vector database creates an <strong>operational two-system problem</strong>: you have to synchronize relational updates in PostgreSQL with vector updates in Pinecone, risking data drift and requiring distributed transaction handling.</em><br />
+<em>With <code>pgvector</code>, our embeddings live directly inside the <code>tickets</code> table as a <code>vector(384)</code> column. We can execute a single ACID transaction that updates a ticket's status and re-indexes its embedding simultaneously, and perform filtered nearest-neighbor queries using standard SQL with HNSW index performance."</em></p>
+</blockquote>
+<hr />
+<h3>Q4: "How did you objectively evaluate your retrieval system before feeding context into the LLM?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"I did not rely on subjective inspection. I constructed a dedicated <strong>100-ticket held-out evaluation set</strong> (<code>eval_100_heldout.csv</code>) from historical resolved tickets.</em><br />
+<em>I evaluated the retriever using <strong>Hit@3</strong>: for each test ticket description, we executed an automated vector query retrieving the top-3 historical matches and checked whether at least one retrieved ticket matched the ground-truth root cause category and had an actionable resolution.</em><br />
+<em>TicketIQ achieved an <strong>[86%] Hit@3</strong> rate. Furthermore, we benchmarked retrieval latency using <code>EXPLAIN ANALYZE</code> on Supabase to verify that HNSW index searches executed in under 100 milliseconds."</em></p>
+</blockquote>
+<hr />
+<h3>Q5: "How did you guarantee that the LLM wouldn't hallucinate fake terminal commands or dangerous IT procedures in the resolution suggestion?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"We implemented a 3-layer defense against hallucinations:</em><br />
+1. <strong><em>Pre-LLM Similarity Gating</em></strong>: <em>Before calling the LLM, we check the cosine similarity of the top retrieved historical ticket. If it is below <code>0.65</code>, we abort the LLM call entirely and return a deterministic message advising human escalation. We never ask an LLM to generate answers when historical context is absent.</em><br />
+2. <strong><em>Strict Grounding Prompt</em></strong>: <em>Our system prompt explicitly defines the LLM as a synthesizer of provided records, strictly forbidding the introduction of outside facts or unverified commands.</em><br />
+3. <strong><em>Pydantic Schema Validation</em></strong>: <em>Using LangChain's <code>with_structured_output</code>, the model is forced to return a JSON object containing a <code>sources</code> array citing the exact historical ticket IDs used. If the model fails schema validation or cannot cite sources, the response is rejected.</em>"</p>
+</blockquote>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

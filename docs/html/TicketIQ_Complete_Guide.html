@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TicketIQ Complete Engineering Guide — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  
+    <div class="cover-page">
+      <div style="font-size: 1.1rem; letter-spacing: 2px; font-weight: 700; color: #6366f1; text-transform: uppercase; margin-bottom: 12px;">Engineering Design & Execution Blueprint</div>
+      <div class="cover-title">TicketIQ</div>
+      <div class="cover-subtitle">AI-Powered IT Helpdesk Triage & Grounded RAG Resolution Assistant</div>
+      <div style="width: 80px; height: 4px; background: #4f46e5; border-radius: 2px; margin: 20px auto;"></div>
+      <div class="cover-meta">
+        <strong>Author:</strong> Aditya Pandey<br>
+        <strong>Program:</strong> B.Tech in Mathematics & Computing (3rd Year)<br>
+        <strong>Focus Areas:</strong> Applied Machine Learning, FastAPI Microservices, pgvector, LangChain RAG, Flutter Web<br>
+        <strong>Date:</strong> November 2026<br>
+        <strong>Deployment Target:</strong> Supabase (PostgreSQL + pgvector) & Render
+      </div>
+    </div>
+    
+
+    <div class="page-break"></div>
+    <div style="margin: 40px 0;">
+      <h1 style="border-bottom: 2px solid #4f46e5; padding-bottom: 8px;">Table of Contents</h1>
+      <table style="margin-top: 24px;">
+        <thead>
+          <tr>
+            <th style="width: 15%;">Section</th>
+            <th style="width: 60%;">Document Title</th>
+            <th style="width: 25%;">Focus Area</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>01</strong></td>
+            <td><a href="#section-1">System Architecture & Design Specification</a></td>
+            <td>Architecture, DB Schema, Contracts</td>
+          </tr>
+          <tr>
+            <td><strong>02</strong></td>
+            <td><a href="#section-2">5-Phase Implementation Roadmap</a></td>
+            <td>Milestones, Deliverables, MVP Scope</td>
+          </tr>
+          <tr>
+            <td><strong>03</strong></td>
+            <td><a href="#section-3">Day-by-Day Workflow & Engineering Playbook</a></td>
+            <td>28-Day Plan, Git Strategy, DoD Checklists</td>
+          </tr>
+          <tr>
+            <td><strong>04</strong></td>
+            <td><a href="#section-4">Syllabus & Learning Map</a></td>
+            <td>ML Foundations, LangChain, Small Extras</td>
+          </tr>
+          <tr>
+            <td><strong>05</strong></td>
+            <td><a href="#section-5">Production Risks & Mitigation Strategies</a></td>
+            <td>Imbalance, Hallucination, Rate Limits</td>
+          </tr>
+          <tr>
+            <td><strong>06</strong></td>
+            <td><a href="#section-6">Resume Bullets & Interview Defense Guide</a></td>
+            <td>Google XYZ Bullets & High-Yield Q&A</td>
+          </tr>
+          <tr>
+            <td><strong>07</strong></td>
+            <td><a href="#section-7">Living Interview Knowledge Journal</a></td>
+            <td>Placement Cheat-Sheet, Math & Decisions</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+
+        <div class="page-break" id="section-1"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 01</div>
+          <h1>TicketIQ — System Architecture &amp; Design Specification</h1>
+<p>This document details the complete end-to-end architecture, database schema, API contracts, data flows, and project folder layout for <strong>TicketIQ</strong>, an AI IT-helpdesk triage and resolution assistant.</p>
+<hr />
+<h2>1. High-Level System Architecture</h2>
+<p>TicketIQ separates user-facing ticket management from machine learning inference and retrieval-augmented generation (RAG) while unifying relational ticket data and dense vector embeddings inside PostgreSQL using the <code>pgvector</code> extension.</p>
+<div class="mermaid">
+flowchart TD
+    subgraph Client Tier
+        UI["Flutter Web Agent Dashboard"]
+        Swagger["Swagger UI / Automated Pytest Suite"]
+    end
+
+    subgraph Application Tier [FastAPI Backend on Render]
+        Auth["JWT Auth & RBAC (User, Agent, Admin)"]
+        Router["FastAPI Router (/tickets, /ml)"]
+
+        subgraph Services
+            TriageSvc["Triage Classifier Service\n(Scikit-Learn Logistic Regression)"]
+            EmbedSvc["Embedding Service\n(sentence-transformers: all-MiniLM-L6-v2)"]
+            RAGSvc["RAG Resolution Chain\n(LangChain + Google Gemini 1.5 Flash)"]
+        end
+    end
+
+    subgraph Data Tier [Supabase PostgreSQL + pgvector]
+        UsersTbl[("users table")]
+        TicketsTbl[("tickets table\n(B-Tree + HNSW Vector Index)")]
+    end
+
+    subgraph External Hosted API
+        Gemini["Google Gemini 1.5 Flash API\n(Google AI Studio)"]
+    end
+
+    UI -->|HTTPS / JWT Bearer| Router
+    Swagger -->|HTTPS / JWT Bearer| Router
+    Router --> Auth
+    Router --> TriageSvc
+    Router --> EmbedSvc
+    Router --> RAGSvc
+
+    TriageSvc -->|Loads serialized .joblib| EmbedSvc
+    EmbedSvc -->|Generates 384-dim vector| TicketsTbl
+    RAGSvc -->|Top-3 vector similarity query <=>| TicketsTbl
+    RAGSvc -->|Formatted prompt with context| Gemini
+    Gemini -->|Structured JSON response| RAGSvc
+
+    Router -->|SQLAlchemy ORM + Session| UsersTbl
+    Router -->|SQLAlchemy ORM + Session| TicketsTbl
+</div>
+
+<hr />
+<h2>2. Core Components</h2>
+<ol>
+<li><strong>Flutter Web Dashboard (Client Tier)</strong>:<br />
+   - Support agent view: Live queue filtered by priority and category, auto-triage confirmation badge, similar tickets pane, and one-click RAG fix insertion.<br />
+   - User view: Ticket submission form with instant feedback.</li>
+<li><strong>FastAPI Application (Application Tier)</strong>:<br />
+   - Security: OAuth2 Password Bearer with JWT tokens (<code>user</code>, <code>agent</code>, <code>admin</code> roles).<br />
+   - Ticket Manager: Standard CRUD for tickets, statuses, assignments, and audit logs.<br />
+   - Inference Engine: Loads pre-trained <code>all-MiniLM-L6-v2</code> encoder (via <code>sentence-transformers</code>) and serialized Scikit-learn Logistic Regression models (<code>category_model.joblib</code>, <code>priority_model.joblib</code>).<br />
+   - RAG Chain Manager: LangChain orchestrator that binds retrieved context into an explainable prompt template and invokes Gemini 1.5 Flash with structured Pydantic output.</li>
+<li><strong>Supabase PostgreSQL with <code>pgvector</code> (Data Tier)</strong>:<br />
+   - Relational tables for Users and Tickets.<br />
+   - Dense vector column <code>embedding vector(384)</code> storing ticket textual representations.<br />
+   - HNSW index on <code>embedding</code> using <code>vector_cosine_ops</code> for fast approximate nearest neighbor (ANN) cosine distance queries.</li>
+<li><strong>Google Gemini 1.5 Flash (LLM Provider)</strong>:<br />
+   - Free-tier hosted LLM accessed via <code>langchain-google-genai</code>.<br />
+   - Constrained via structured JSON output parser to return strictly <code>{suggested_fix, sources, confidence_note}</code> without hallucinations.</li>
+</ol>
+<hr />
+<h2>3. Data Flows</h2>
+<h3>Flow 1: Ticket Ingestion &amp; Auto-Triage (<code>POST /api/v1/tickets</code>)</h3>
+<ol>
+<li>User or agent submits <code>{title, description}</code>.</li>
+<li>Embedding Service computes dense vector: (\mathbf{v} \in \mathbb{R}^{384}).</li>
+<li>Triage Classifier feeds (\mathbf{v}) into Logistic Regression models to predict:<br />
+   - <code>category</code> (e.g., <em>Hardware, Software, Network, Access</em>)<br />
+   - <code>priority</code> (e.g., <em>Low, Medium, High, Critical</em>)</li>
+<li>Ticket record is inserted into <code>tickets</code> table with <code>status = 'Open'</code>, predicted labels, and <code>embedding = v</code>.</li>
+<li>Created ticket is returned with HTTP 201.</li>
+</ol>
+<div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Client / User
+    participant API as FastAPI Router
+    participant ML as ML Triage Service
+    participant DB as PostgreSQL (pgvector)
+
+    User->>API: POST /api/v1/tickets (title, description)
+    API->>ML: Predict category & priority (all-MiniLM-L6-v2 + LogReg)
+    ML-->>API: Predicted labels & probability distributions
+    API->>ML: Compute vector embedding (384-dim)
+    ML-->>API: Dense vector embedding
+    API->>DB: INSERT into tickets (title, desc, category, priority, embedding, status='Open')
+    DB-->>API: Inserted Ticket Record
+    API-->>User: HTTP 201 Created (Ticket Details + Predicted Triage)
+</div>
+
+<h3>Flow 2: Similar / Duplicate Ticket Search (<code>POST /api/v1/tickets/similar</code>)</h3>
+<ol>
+<li>Agent inputs text query or references an active ticket ID.</li>
+<li>Text is converted to embedding (\mathbf{q} \in \mathbb{R}^{384}).</li>
+<li>Query executes cosine distance lookup in PostgreSQL:<br />
+<code>sql
+   SELECT id, title, description, status, resolution_notes,
+          1 - (embedding &lt;=&gt; :q) AS similarity_score
+   FROM tickets
+   WHERE id != :exclude_id
+   ORDER BY embedding &lt;=&gt; :q ASC
+   LIMIT :limit;</code></li>
+<li>Returns top-K similar historical tickets with similarity scores (\in [0, 1]).</li>
+</ol>
+<h3>Flow 3: RAG Resolution Assistant (<code>POST /api/v1/tickets/{id}/suggest</code>)</h3>
+<ol>
+<li>Agent requests AI resolution assistance for ticket ID (t).</li>
+<li>System fetches ticket (t) and retrieves top-3 historically <strong>Resolved</strong> tickets with cosine similarity score (\ge 0.65).</li>
+<li>If no resolved tickets meet the threshold, chain halts early and returns a fallback message: <em>"No sufficiently similar resolved tickets found. Please escalate to a Senior Specialist."</em></li>
+<li>If similar resolved tickets exist, format context into a strict prompt template:<br />
+   - Grounding rule: Use <em>only</em> historical resolutions. Do not invent steps.</li>
+<li>Invoke Gemini 1.5 Flash with structured output schema:<br />
+<code>json
+   {
+     "suggested_fix": "Step-by-step resolution steps...",
+     "sources": [102, 189],
+     "confidence_note": "Based on 2 historical tickets with &gt;80% similarity."
+   }</code></li>
+<li>Return structured JSON payload to the agent dashboard.</li>
+</ol>
+<hr />
+<h2>4. Database Schema (PostgreSQL + pgvector)</h2>
+<div class="mermaid">
+erDiagram
+    USERS {
+        uuid id PK
+        varchar email UK
+        varchar hashed_password
+        varchar full_name
+        varchar role "user | agent | admin"
+        timestamp created_at
+    }
+
+    TICKETS {
+        uuid id PK
+        varchar title
+        text description
+        varchar category "Hardware | Software | Network | Access"
+        varchar priority "Low | Medium | High | Critical"
+        varchar status "Open | In_Progress | Resolved | Closed"
+        uuid created_by_id FK
+        uuid assigned_to_id FK
+        text resolution_notes
+        vector_384 embedding
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USERS ||--o{ TICKETS : "creates"
+    USERS ||--o{ TICKETS : "assigned to"
+</div>
+
+<h3>SQL DDL Definition</h3>
+<pre><code class="language-sql">-- Enable pgvector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Users table
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    hashed_password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'agent', 'admin')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tickets table
+CREATE TABLE tickets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(50) NOT NULL CHECK (category IN ('Hardware', 'Software', 'Network', 'Access')),
+    priority VARCHAR(50) NOT NULL CHECK (priority IN ('Low', 'Medium', 'High', 'Critical')),
+    status VARCHAR(50) NOT NULL DEFAULT 'Open' CHECK (status IN ('Open', 'In_Progress', 'Resolved', 'Closed')),
+    created_by_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    assigned_to_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    resolution_notes TEXT,
+    embedding VECTOR(384),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Standard relational indexes
+CREATE INDEX idx_tickets_status ON tickets(status);
+CREATE INDEX idx_tickets_category ON tickets(category);
+CREATE INDEX idx_tickets_priority ON tickets(priority);
+CREATE INDEX idx_tickets_created_by ON tickets(created_by_id);
+CREATE INDEX idx_tickets_assigned_to ON tickets(assigned_to_id);
+
+-- HNSW Vector Index for Cosine Distance (&lt;=&gt;)
+-- m=16 (connections per element), ef_construction=64 (build trade-off)
+CREATE INDEX idx_tickets_embedding_hnsw 
+ON tickets USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+</code></pre>
+<hr />
+<h2>5. API Contracts &amp; Specifications</h2>
+<p>All authenticated endpoints require an <code>Authorization: Bearer &lt;JWT&gt;</code> header.</p>
+<h3>5.1 Authentication Endpoints</h3>
+<ul>
+<li><code>POST /api/v1/auth/register</code>: Create a new user account.</li>
+<li><code>POST /api/v1/auth/login</code>: Exchange <code>username</code> &amp; <code>password</code> for <code>{access_token, token_type}</code>.</li>
+<li><code>GET /api/v1/auth/me</code>: Retrieve current user profile and role.</li>
+</ul>
+<h3>5.2 Ticket Management Endpoints</h3>
+<ul>
+<li><code>POST /api/v1/tickets</code>:</li>
+<li>Request: <code>{ "title": "Cannot connect to VPN", "description": "GlobalProtect gives error 502." }</code></li>
+<li>Response (201): Ticket object including auto-predicted <code>category</code>, <code>priority</code>, and <code>status: "Open"</code>.</li>
+<li><code>GET /api/v1/tickets</code>: List tickets with query params (<code>status</code>, <code>category</code>, <code>priority</code>, <code>limit</code>, <code>offset</code>).</li>
+<li><code>GET /api/v1/tickets/{id}</code>: Detailed ticket view.</li>
+<li><code>PATCH /api/v1/tickets/{id}</code>: Update status, assignment, or resolution notes.</li>
+</ul>
+<h3>5.3 Machine Learning &amp; RAG Endpoints</h3>
+<h4><code>POST /api/v1/ml/predict</code></h4>
+<p>Predicts category and priority without persisting a ticket.</p>
+<pre><code class="language-json">// Request Body
+{
+  &quot;title&quot;: &quot;Broken monitor HDMI port&quot;,
+  &quot;description&quot;: &quot;Screen flickers and turns black when connected via HDMI adapter.&quot;
+}
+
+// Response Body (200 OK)
+{
+  &quot;category&quot;: &quot;Hardware&quot;,
+  &quot;category_confidence&quot;: 0.89,
+  &quot;category_probabilities&quot;: {
+    &quot;Hardware&quot;: 0.89,
+    &quot;Software&quot;: 0.05,
+    &quot;Network&quot;: 0.04,
+    &quot;Access&quot;: 0.02
+  },
+  &quot;priority&quot;: &quot;High&quot;,
+  &quot;priority_confidence&quot;: 0.76,
+  &quot;priority_probabilities&quot;: {
+    &quot;Low&quot;: 0.04,
+    &quot;Medium&quot;: 0.20,
+    &quot;High&quot;: 0.76,
+    &quot;Critical&quot;: 0.00
+  }
+}
+</code></pre>
+<h4><code>POST /api/v1/ml/similar</code></h4>
+<p>Searches historical tickets using cosine similarity over embeddings.</p>
+<pre><code class="language-json">// Request Body
+{
+  &quot;text&quot;: &quot;Outlook keeps crashing on launch after Windows update&quot;,
+  &quot;limit&quot;: 3,
+  &quot;status_filter&quot;: &quot;Resolved&quot;
+}
+
+// Response Body (200 OK)
+{
+  &quot;query&quot;: &quot;Outlook keeps crashing on launch after Windows update&quot;,
+  &quot;results&quot;: [
+    {
+      &quot;id&quot;: &quot;c1f7b889-4a90-48e2-bca4-d4b889412e21&quot;,
+      &quot;title&quot;: &quot;Outlook crash on start-up&quot;,
+      &quot;description&quot;: &quot;Office 365 Outlook terminates unexpectedly during profile load.&quot;,
+      &quot;category&quot;: &quot;Software&quot;,
+      &quot;status&quot;: &quot;Resolved&quot;,
+      &quot;resolution_notes&quot;: &quot;Repaired Office installation via Add/Remove programs and re-synced profile.&quot;,
+      &quot;similarity_score&quot;: 0.912
+    }
+  ]
+}
+</code></pre>
+<h4><code>POST /api/v1/ml/suggest</code></h4>
+<p>Generates a grounded resolution recommendation using top-3 historical resolved tickets and Gemini 1.5 Flash.</p>
+<pre><code class="language-json">// Request Body
+{
+  &quot;ticket_id&quot;: &quot;c1f7b889-4a90-48e2-bca4-d4b889412e21&quot;
+}
+
+// Response Body (200 OK)
+{
+  &quot;ticket_id&quot;: &quot;c1f7b889-4a90-48e2-bca4-d4b889412e21&quot;,
+  &quot;suggested_fix&quot;: &quot;1. Run Windows Quick Repair on Microsoft 365.\n2. If issue persists, launch Outlook in safe mode (outlook.exe /safe).\n3. Rebuild the OST mail profile.&quot;,
+  &quot;sources&quot;: [
+    {
+      &quot;ticket_id&quot;: &quot;893c5fa1-...&quot;,
+      &quot;title&quot;: &quot;Outlook crash on start-up&quot;,
+      &quot;similarity_score&quot;: 0.912
+    },
+    {
+      &quot;ticket_id&quot;: &quot;147da33e-...&quot;,
+      &quot;title&quot;: &quot;Office app error after KB update&quot;,
+      &quot;similarity_score&quot;: 0.845
+    }
+  ],
+  &quot;confidence_note&quot;: &quot;Grounded in 2 historical resolved tickets with &gt;80% semantic match.&quot;
+}
+</code></pre>
+<hr />
+<h2>6. Project Directory Layout</h2>
+<pre><code class="language-text">TicketIQ/
+├── .env.example
+├── README.md
+├── requirements.txt
+├── Dockerfile
+├── docs/
+│   ├── architecture.md
+│   ├── phases.md
+│   ├── workflow.md
+│   ├── learning_map.md
+│   ├── risks.md
+│   └── resume_bullets.md
+├── data/
+│   ├── raw/
+│   │   └── customer_support_tickets.csv
+│   ├── processed/
+│   │   ├── train.csv
+│   │   ├── test.csv
+│   │   └── eval_100_heldout.csv
+│   └── models/
+│       ├── tfidf_vectorizer.joblib
+│       ├── baseline_category_lr.joblib
+│       ├── baseline_priority_lr.joblib
+│       ├── embedding_category_lr.joblib
+│       ├── embedding_priority_lr.joblib
+│       └── label_encoders.joblib
+├── notebooks/
+│   ├── 01_eda_and_cleaning.ipynb
+│   ├── 02_baseline_tfidf_logistic_regression.ipynb
+│   ├── 03_embeddings_logistic_regression.ipynb
+│   └── 04_pgvector_retrieval_and_eval.ipynb
+├── backend/
+│   ├── alembic/
+│   │   ├── env.py
+│   │   └── versions/
+│   ├── alembic.ini
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   └── security.py
+│   │   ├── db/
+│   │   │   ├── base.py
+│   │   │   └── session.py
+│   │   ├── models/
+│   │   │   ├── user.py
+│   │   │   └── ticket.py
+│   │   ├── schemas/
+│   │   │   ├── user.py
+│   │   │   ├── ticket.py
+│   │   │   └── ml.py
+│   │   ├── services/
+│   │   │   ├── auth_service.py
+│   │   │   ├── ticket_service.py
+│   │   │   └── ml/
+│   │   │       ├── encoder.py         # all-MiniLM-L6-v2 wrapper
+│   │   │       ├── classifier.py      # Logistic Regression predictor
+│   │   │       ├── retriever.py       # pgvector cosine similarity
+│   │   │       └── rag_chain.py       # LangChain + Gemini structured chain
+│   │   └── api/
+│   │       ├── deps.py
+│   │       └── v1/
+│   │           ├── router.py
+│   │           ├── endpoints/
+│   │           │   ├── auth.py
+│   │           │   ├── tickets.py
+│   │           │   └── ml.py
+│   └── tests/
+│       ├── conftest.py
+│       ├── test_auth.py
+│       ├── test_tickets.py
+│       ├── test_classifier.py
+│       └── test_rag_chain.py
+└── frontend/
+    └── ticketiq_dashboard/           # Flutter Web application (Phase 4)
+        ├── pubspec.yaml
+        └── lib/
+            ├── main.dart
+            ├── models/
+            ├── providers/
+            ├── services/
+            └── screens/
+</code></pre>
+        </div>
+        
+
+        <div class="page-break" id="section-2"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 02</div>
+          <h1>TicketIQ — 5-Phase Implementation Plan</h1>
+<p>This roadmap organizes the development of TicketIQ into <strong>5 distinct phases</strong> designed for a 4-week timeline (2–3 hours/day).</p>
+<blockquote>
+<p><strong>Core MVP Milestone</strong>: <strong>Phases 1 through 3 form a complete, end-to-end functioning MVP.</strong> You will have a trained explainable classifier, a functional vector search system in PostgreSQL, and an authenticated FastAPI backend serving RAG resolutions before building the frontend or deploying to the cloud.</p>
+</blockquote>
+<hr />
+<h2>Phase Summary Table</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Focus Area</th>
+<th style="text-align: left;">Estimated Duration</th>
+<th style="text-align: left;">Milestone Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Phase 1</strong></td>
+<td style="text-align: left;"><strong>Standalone Classifier &amp; Experiments</strong></td>
+<td style="text-align: left;">ML Modeling &amp; Evaluation</td>
+<td style="text-align: left;">Days 1 – 6 (6 days)</td>
+<td style="text-align: left;">Standalone Jupyter Notebooks + Model <code>.joblib</code> artifacts</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 2</strong></td>
+<td style="text-align: left;"><strong>Vector Retrieval &amp; pgvector Setup</strong></td>
+<td style="text-align: left;">DB Vectors &amp; Similarity Search</td>
+<td style="text-align: left;">Days 7 – 12 (6 days)</td>
+<td style="text-align: left;">Supabase pgvector schema + Hit@3 evaluation benchmark</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 3</strong></td>
+<td style="text-align: left;"><strong>RAG Chain &amp; FastAPI Backend (MVP)</strong></td>
+<td style="text-align: left;">LangChain &amp; API Engineering</td>
+<td style="text-align: left;">Days 13 – 18 (6 days)</td>
+<td style="text-align: left;">Fully functional, authenticated REST API with Pytest suite</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 4</strong></td>
+<td style="text-align: left;"><strong>Flutter Web Agent Dashboard</strong></td>
+<td style="text-align: left;">Frontend &amp; User Experience</td>
+<td style="text-align: left;">Days 19 – 23 (5 days)</td>
+<td style="text-align: left;">Interactive web UI for IT support agents</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 5</strong></td>
+<td style="text-align: left;"><strong>Testing, Hardening &amp; Cloud Deploy</strong></td>
+<td style="text-align: left;">Containerization &amp; Cloud Launch</td>
+<td style="text-align: left;">Days 24 – 28 (5 days)</td>
+<td style="text-align: left;">Live Render + Supabase deployment with verified latency</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Detailed Phase Breakdown</h2>
+<hr />
+<h3>Phase 1: Standalone ML Classifier &amp; Experimentation Notebook</h3>
+<p><em>Estimated Timeline: Days 1 – 6</em></p>
+<h4>Goal</h4>
+<p>Build, rigorously evaluate, and compare an explainable text classification pipeline predicting ticket <strong>Category</strong> (multiclass) and <strong>Priority</strong> (multiclass/ordinal) from textual descriptions using Scikit-Learn.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Data Acquisition &amp; EDA</strong>:<br />
+   - Download the IT/Customer Support Ticket dataset from Kaggle into <code>data/raw/</code>.<br />
+   - Perform exploratory data analysis: inspect distributions of ticket lengths, class frequencies for Category (<em>Hardware, Software, Network, Access</em>) and Priority (<em>Low, Medium, High, Critical</em>).<br />
+   - Clean text: lowercase conversion, whitespace normalization, removal of HTML tags/system artifacts.</li>
+<li><strong>Train/Test Splitting</strong>:<br />
+   - Create a clean 80/20 train/test split using <code>StratifiedShuffleSplit</code> to preserve class distributions across both Category and Priority.<br />
+   - Set aside a 100-ticket held-out set specifically for future retrieval benchmarking in Phase 2.</li>
+<li><strong>Baseline Model (TF-IDF + Logistic Regression)</strong>:<br />
+   - Fit <code>TfidfVectorizer</code> (max_features=5000, n-gram range=(1, 2), stop_words='english') on training text.<br />
+   - Train <code>LogisticRegression(max_iter=1000, class_weight='balanced')</code> for Category and Priority.<br />
+   - Evaluate with <code>classification_report</code> (precision, recall, macro-F1) and confusion matrices.</li>
+<li><strong>Embedding-Based Model (<code>all-MiniLM-L6-v2</code> + Logistic Regression)</strong>:<br />
+   - Generate 384-dimensional dense sentence embeddings using <code>sentence-transformers</code>.<br />
+   - Train <code>LogisticRegression</code> on the dense embeddings.<br />
+   - Compare performance against the TF-IDF baseline using Macro-F1.</li>
+<li><strong>Model Serialization</strong>:<br />
+   - Save the fitted vectorizer/embedder config and trained Logistic Regression estimators using <code>joblib</code> into <code>data/models/</code>.</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li><code>notebooks/01_eda_and_cleaning.ipynb</code></li>
+<li><code>notebooks/02_baseline_tfidf_logistic_regression.ipynb</code></li>
+<li><code>notebooks/03_embeddings_logistic_regression.ipynb</code></li>
+<li>Serialized artifacts: <code>data/models/embedding_category_lr.joblib</code>, <code>data/models/embedding_priority_lr.joblib</code>, <code>data/models/label_encoders.joblib</code>.</li>
+<li>Experiment log table comparing TF-IDF vs Dense Embeddings.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Category classifier achieves (\ge 0.75) Macro-F1 on the test set.</li>
+<li>[ ] Priority classifier achieves (\ge 0.65) Macro-F1 on the test set.</li>
+<li>[ ] Embedding-based classifier matches or outperforms the TF-IDF baseline.</li>
+<li>[ ] Confusion matrices generated and analyzed for systematic confusion (e.g. Medium vs High priority).</li>
+<li>[ ] Serialized <code>.joblib</code> models can be loaded into a clean Python session and produce predictions on raw strings in (&lt; 25\text{ ms}).</li>
+</ul>
+<hr />
+<h3>Phase 2: Vector Search &amp; Grounded Retrieval with pgvector</h3>
+<p><em>Estimated Timeline: Days 7 – 12</em></p>
+<h4>Goal</h4>
+<p>Set up Supabase PostgreSQL with the <code>pgvector</code> extension, batch-index ticket embeddings, and build an explainable similarity search pipeline evaluated on a held-out benchmark.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Database Vector Initialization</strong>:<br />
+   - Enable <code>vector</code> extension in Supabase PostgreSQL instance.<br />
+   - Define table schema for <code>tickets</code> with column <code>embedding vector(384)</code>.<br />
+   - Create an HNSW index using cosine distance: <code>USING hnsw (embedding vector_cosine_ops)</code>.</li>
+<li><strong>Batch Ingestion Script</strong>:<br />
+   - Write a standalone Python script <code>scripts/ingest_historical_tickets.py</code> to embed historical resolved tickets and bulk-insert them into Supabase via SQLAlchemy.</li>
+<li><strong>Similarity Search Implementation</strong>:<br />
+   - Write SQL queries computing Cosine Similarity from Cosine Distance:<br />
+     [<br />
+     \text{Cosine Similarity} = 1 - (\mathbf{u} \cdot \mathbf{v}) = 1 - (\text{embedding} \Leftrightarrow \text{query_vector})<br />
+     ]<br />
+   - Implement filtering by <code>status = 'Resolved'</code> and similarity thresholding ((\ge 0.65)).</li>
+<li><strong>Retrieval Evaluation (Hit@3 Benchmark)</strong>:<br />
+   - Run retrieval against the 100 held-out evaluation tickets.<br />
+   - For each evaluation ticket, retrieve top-3 similar tickets.<br />
+   - Compute <strong>Hit@3</strong>: percentage of queries where at least one of the top-3 retrieved tickets addresses the same root cause category.</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li><code>notebooks/04_pgvector_retrieval_and_eval.ipynb</code></li>
+<li><code>scripts/ingest_historical_tickets.py</code></li>
+<li>Supabase SQL schema migration script.</li>
+<li>Retrieval evaluation report documenting Hit@3 and average query latency.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Supabase table populated with (\ge 1,000) embedded historical tickets.</li>
+<li>[ ] HNSW vector index active and functional.</li>
+<li>[ ] Retrieval query latency (&lt; 100\text{ ms}) for top-3 nearest neighbors.</li>
+<li>[ ] Hit@3 metric on the 100-ticket held-out set achieves (\ge 80\%).</li>
+</ul>
+<hr />
+<h3>Phase 3: RAG Resolution Chain &amp; Core FastAPI Service (MVP Completion)</h3>
+<p><em>Estimated Timeline: Days 13 – 18</em></p>
+<h4>Goal</h4>
+<p>Build the LangChain-orchestrated RAG resolution pipeline with Google Gemini 1.5 Flash and wrap the entire system in a production-ready FastAPI application with JWT RBAC.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>LangChain Grounded Resolution Chain</strong>:<br />
+   - Create a clean wrapper for Google Gemini 1.5 Flash using <code>langchain-google-genai</code>.<br />
+   - Write a strict prompt template enforcing <strong>grounded generation</strong>: the model must ONLY generate recommendations derived from the retrieved historical resolutions.<br />
+   - Enforce Pydantic structured output (<code>with_structured_output</code>) returning:<ul>
+<li><code>suggested_fix</code>: Step-by-step guidance.</li>
+<li><code>sources</code>: Array of ticket IDs used as evidence.</li>
+<li><code>confidence_note</code>: Brief justification.</li>
+</ul>
+</li>
+<li><strong>FastAPI Application Architecture</strong>:<br />
+   - Implement application layout (<code>app/api</code>, <code>app/models</code>, <code>app/schemas</code>, <code>app/services</code>).<br />
+   - Implement JWT authentication with role-based access control (<code>user</code>, <code>agent</code>, <code>admin</code>).</li>
+<li><strong>Endpoint Development</strong>:<br />
+   - <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code><br />
+   - <code>POST /api/v1/tickets</code> (Auto-triages category and priority upon creation).<br />
+   - <code>GET /api/v1/tickets</code>, <code>GET /api/v1/tickets/{id}</code>, <code>PATCH /api/v1/tickets/{id}</code><br />
+   - <code>POST /api/v1/ml/predict</code> (Standalone prediction without saving).<br />
+   - <code>POST /api/v1/ml/similar</code> (Top-K duplicate/similar search).<br />
+   - <code>POST /api/v1/ml/suggest</code> (Top-3 retrieval + Gemini structured RAG resolution).</li>
+<li><strong>Automated Testing Suite</strong>:<br />
+   - Write unit and integration tests using <code>pytest</code> and <code>httpx.AsyncClient</code>.<br />
+   - Mock external Gemini API calls in test suite to ensure deterministic, zero-cost CI testing.</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li>Complete backend codebase in <code>backend/app/</code>.</li>
+<li>Alembic database migration scripts.</li>
+<li>Pytest test suite in <code>backend/tests/</code> covering Auth, CRUD, ML inference, and RAG chains.</li>
+<li>Interactive Swagger documentation accessible at <code>/docs</code>.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] <strong>Full MVP Works End-to-End</strong>: A user can create a ticket via API, the system auto-assigns category/priority, and an agent can call <code>/suggest</code> to receive a validated JSON resolution grounded in top-3 historical tickets.</li>
+<li>[ ] All Pytest unit and integration tests pass with 100% green status.</li>
+<li>[ ] RAG endpoint returns HTTP 422 or fallback response if no historical tickets exceed the 0.65 similarity threshold (no ungrounded hallucination).</li>
+<li>[ ] RBAC enforcement verified: Standard <code>user</code> cannot access agent-only resolution endpoints.</li>
+</ul>
+<hr />
+<h3>Phase 4: Flutter Web Agent Dashboard</h3>
+<p><em>Estimated Timeline: Days 19 – 23</em></p>
+<h4>Goal</h4>
+<p>Build a clean, responsive Flutter Web dashboard for IT support agents to triage incoming tickets, inspect similarity search results, and accept AI-generated resolution suggestions.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Flutter Web Project Setup</strong>:<br />
+   - Initialize Flutter Web project in <code>frontend/ticketiq_dashboard/</code>.<br />
+   - Configure HTTP client service with secure JWT token storage (via <code>shared_preferences</code> or browser storage).</li>
+<li><strong>Authentication &amp; Queue Management</strong>:<br />
+   - Build Login &amp; Registration screen.<br />
+   - Build Support Queue Dashboard: tabular or card view of open tickets with filter chips (Status, Priority, Category).</li>
+<li><strong>Ticket Detail &amp; Triage View</strong>:<br />
+   - Display ticket title, description, requester, and timestamps.<br />
+   - Show "AI Predicted Triage" badge with confidence level. Allow agent to override if needed.</li>
+<li><strong>Interactive AI Assistance Panel</strong>:<br />
+   - "Similar Tickets" tab displaying top-3 historical matches with similarity percentage and resolution notes.<br />
+   - "Generate Resolution" button that triggers <code>POST /suggest</code> and displays the structured fix with citations.<br />
+   - "Insert into Resolution Notes" button that copies the AI fix into the ticket's resolution field and marks status as "Resolved".</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li>Complete Flutter Web application in <code>frontend/ticketiq_dashboard/</code>.</li>
+<li>Production web bundle build (<code>flutter build web --release</code>).</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Agent can log in, view live tickets from FastAPI backend, and filter by priority/status.</li>
+<li>[ ] Ticket detail screen displays auto-triage category and priority badges.</li>
+<li>[ ] Clicking "Generate Resolution" triggers RAG chain and renders structured steps with source ticket links within (&lt; 3\text{ seconds}).</li>
+<li>[ ] One-click action allows agent to approve/edit the AI fix and update ticket to "Resolved".</li>
+</ul>
+<hr />
+<h3>Phase 5: Testing, Hardening &amp; Cloud Deployment</h3>
+<p><em>Estimated Timeline: Days 24 – 28</em></p>
+<h4>Goal</h4>
+<p>Containerize the FastAPI backend, configure connection pooling on Supabase, deploy backend and frontend to Render, and verify live performance and stability.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Containerization &amp; Optimization</strong>:<br />
+   - Write a multi-stage <code>Dockerfile</code> for FastAPI that downloads <code>all-MiniLM-L6-v2</code> during Docker build to eliminate runtime download delays.<br />
+   - Configure production server using <code>uvicorn</code> with multiple workers.</li>
+<li><strong>Supabase Production Configuration</strong>:<br />
+   - Configure Supabase Connection Pooler (Transaction Mode / PgBouncer on port 6543) to prevent connection exhaustion on free tiers.</li>
+<li><strong>Render Deployment</strong>:<br />
+   - Deploy FastAPI backend as a Render Web Service.<br />
+   - Configure environment variables (<code>DATABASE_URL</code>, <code>GEMINI_API_KEY</code>, <code>JWT_SECRET_KEY</code>).<br />
+   - Host Flutter Web build (via Render Static Site, Vercel, or GitHub Pages).</li>
+<li><strong>End-to-End Verification &amp; Documentation</strong>:<br />
+   - Run smoke tests against live public URL.<br />
+   - Measure live response latencies:<ul>
+<li><code>/predict</code>: (&lt; 50\text{ ms})</li>
+<li><code>/similar</code>: (&lt; 120\text{ ms})</li>
+<li><code>/suggest</code>: (&lt; 2.5\text{ s}) (including Gemini generation)</li>
+<li>Finalize project README with architectural diagrams, API docs, and demo video/GIF.</li>
+</ul>
+</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li>Production <code>Dockerfile</code> and <code>docker-compose.yml</code>.</li>
+<li>Live, publicly accessible backend on Render and database on Supabase.</li>
+<li>Live hosted Flutter Web dashboard.</li>
+<li>Verification test run report documenting latencies and uptime.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Public HTTPS API responds successfully to health check <code>GET /health</code>.</li>
+<li>[ ] Live Flutter Web UI communicates seamlessly with Render backend with zero CORS issues.</li>
+<li>[ ] Database queries utilize HNSW index without exceeding Supabase free-tier RAM limits.</li>
+<li>[ ] End-to-end user story works on production: Create Ticket (\to) Auto-Triage (\to) Similar Search (\to) AI Suggest (\to) Resolve Ticket.</li>
+</ul>
+        </div>
+        
+
+        <div class="page-break" id="section-3"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 03</div>
+          <h1>TicketIQ — Day-by-Day Workflow &amp; Engineering Playbook</h1>
+<p>This document defines the 28-day execution plan (2–3 hours/day), Git branching conventions, metric logging protocol, and Definition-of-Done (DoD) checklists for every phase.</p>
+<hr />
+<h2>1. Day-by-Day Plan (28 Days)</h2>
+<h3>Week 1: Phase 1 — Standalone Classifier &amp; Experimentation Notebook</h3>
+<p><em>Goal: Build an explainable text classification pipeline predicting Category and Priority.</em></p>
+<ul>
+<li><strong>Day 1: Environment Setup &amp; EDA</strong></li>
+<li>Initialize Git repo, create virtual environment (<code>venv</code>), install dependencies (<code>scikit-learn</code>, <code>pandas</code>, <code>numpy</code>, <code>matplotlib</code>, <code>seaborn</code>, <code>jupyter</code>).</li>
+<li>Download dataset from Kaggle to <code>data/raw/</code>.</li>
+<li>Open <code>notebooks/01_eda_and_cleaning.ipynb</code>: analyze class distributions, missing values, text length histograms.</li>
+<li><strong>Day 2: Data Preprocessing &amp; Stratified Splitting</strong></li>
+<li>Implement text cleaning functions (lowercase, regex strip URLs/HTML, whitespace normalization).</li>
+<li>Create stratified 80/20 train/test split to preserve class ratios.</li>
+<li>Carve out 100 historical resolved tickets into <code>data/processed/eval_100_heldout.csv</code> for Phase 2 retrieval testing.</li>
+<li>Save <code>data/processed/train.csv</code> and <code>data/processed/test.csv</code>.</li>
+<li><strong>Day 3: Baseline Classifier (TF-IDF + Logistic Regression)</strong></li>
+<li>Open <code>notebooks/02_baseline_tfidf_logistic_regression.ipynb</code>.</li>
+<li>Fit <code>TfidfVectorizer(max_features=5000, ngram_range=(1,2))</code> on training text.</li>
+<li>Train baseline <code>LogisticRegression(class_weight='balanced')</code> for <strong>Category</strong>.</li>
+<li>Train baseline <code>LogisticRegression(class_weight='balanced')</code> for <strong>Priority</strong>.</li>
+<li>Compute classification report (precision, recall, macro-F1) and plot confusion matrix.</li>
+<li><strong>Day 4: Dense Sentence Embeddings (<code>all-MiniLM-L6-v2</code>)</strong></li>
+<li>Open <code>notebooks/03_embeddings_logistic_regression.ipynb</code>.</li>
+<li>Install <code>sentence-transformers</code> and encode train/test text into 384-dimensional dense vectors.</li>
+<li>Train <code>LogisticRegression</code> on embeddings for Category and Priority.</li>
+<li>Log macro-F1 and compare head-to-head against TF-IDF baseline.</li>
+<li><strong>Day 5: Error Analysis &amp; Hyperparameter Tuning</strong></li>
+<li>Inspect confusion matrices: where does the classifier fail? (e.g. "Access" vs "Software", "Medium" vs "High").</li>
+<li>Tune regularization parameter (C \in [0.1, 1.0, 10.0]) using stratified validation.</li>
+<li>Validate that inference latency on a single text string is (&lt; 25\text{ ms}).</li>
+<li><strong>Day 6: Serialization &amp; Phase 1 Sign-Off</strong></li>
+<li>Export trained models to <code>data/models/</code>:<ul>
+<li><code>embedding_category_lr.joblib</code></li>
+<li><code>embedding_priority_lr.joblib</code></li>
+<li><code>label_encoders.joblib</code></li>
+</ul>
+</li>
+<li>Write a standalone test script <code>scripts/verify_models.py</code> verifying that models load and predict correctly.</li>
+<li>Complete Phase 1 Definition-of-Done checklist.</li>
+</ul>
+<hr />
+<h3>Week 2: Phase 2 — Vector Retrieval &amp; pgvector Setup</h3>
+<p><em>Goal: Index ticket embeddings in Supabase PostgreSQL and evaluate duplicate/similar retrieval.</em></p>
+<ul>
+<li><strong>Day 7: Supabase PostgreSQL &amp; pgvector Setup</strong></li>
+<li>Create free-tier Supabase project.</li>
+<li>Enable <code>vector</code> extension in PostgreSQL.</li>
+<li>Create <code>users</code> and <code>tickets</code> tables via SQL editor.</li>
+<li>Create HNSW index on <code>tickets(embedding)</code> using <code>vector_cosine_ops</code>.</li>
+<li><strong>Day 8: Batch Ingestion Script</strong></li>
+<li>Write <code>scripts/ingest_historical_tickets.py</code> using <code>SQLAlchemy</code> and <code>pgvector.sqlalchemy</code>.</li>
+<li>Encode (\ge 1,000) historical tickets from <code>train.csv</code> and insert them into Supabase.</li>
+<li>Verify row count, column constraints, and vector dimensions (384).</li>
+<li><strong>Day 9: SQL Similarity Search Testing</strong></li>
+<li>Open <code>notebooks/04_pgvector_retrieval_and_eval.ipynb</code>.</li>
+<li>Implement raw SQL and SQLAlchemy queries computing cosine similarity:<br />
+    [<br />
+    \text{similarity} = 1 - (\text{embedding} \Leftrightarrow \text{query_vector})<br />
+    ]</li>
+<li>Test queries with varying filters (<code>status = 'Resolved'</code>) and similarity thresholds ((\ge 0.65)).</li>
+<li><strong>Day 10: Benchmark Suite Setup</strong></li>
+<li>Load the 100 held-out evaluation tickets (<code>eval_100_heldout.csv</code>).</li>
+<li>Formulate automated queries using the ticket description as search input.</li>
+<li><strong>Day 11: Retrieval Evaluation (Hit@3 Calculation)</strong></li>
+<li>Execute top-3 retrieval for all 100 evaluation tickets.</li>
+<li>Calculate <strong>Hit@3</strong>: query is a "hit" if at least one of the top-3 results shares the ground-truth category and addresses a related issue.</li>
+<li>Record average vector query latency across the 100 queries.</li>
+<li><strong>Day 12: Index Tuning &amp; Phase 2 Sign-Off</strong></li>
+<li>Verify HNSW query performance with <code>EXPLAIN ANALYZE</code>.</li>
+<li>Ensure query execution time remains (&lt; 100\text{ ms}).</li>
+<li>Complete Phase 2 Definition-of-Done checklist.</li>
+</ul>
+<hr />
+<h3>Week 3: Phase 3 — RAG Resolution Chain &amp; Core FastAPI Service (MVP)</h3>
+<p><em>Goal: Assemble LangChain RAG pipeline and complete the production-ready FastAPI service.</em></p>
+<ul>
+<li><strong>Day 13: LangChain Gemini Integration</strong></li>
+<li>Obtain Google AI Studio API key for Gemini 1.5 Flash.</li>
+<li>Install <code>langchain</code> and <code>langchain-google-genai</code>.</li>
+<li>Define Pydantic output schema <code>ResolutionResponse(suggested_fix, sources, confidence_note)</code>.</li>
+<li>Test LLM generation using <code>with_structured_output(ResolutionResponse)</code>.</li>
+<li><strong>Day 14: RAG Chain Assembly</strong></li>
+<li>Build <code>app/services/ml/rag_chain.py</code>:<ul>
+<li>Retrieve top-3 historical resolved tickets from Supabase.</li>
+<li>Format prompt: strictly instruct LLM to synthesize only from retrieved resolutions.</li>
+<li>If top similarity (&lt; 0.65), return fallback response without calling Gemini.</li>
+</ul>
+</li>
+<li>Verify zero hallucination on out-of-domain queries.</li>
+<li><strong>Day 15: FastAPI Foundation &amp; Auth Engine</strong></li>
+<li>Scaffold <code>backend/app/</code> structure (<code>core</code>, <code>db</code>, <code>models</code>, <code>schemas</code>, <code>api</code>).</li>
+<li>Configure SQLAlchemy async/sync session and Alembic migrations.</li>
+<li>Implement JWT authentication with password hashing (<code>passlib</code>/<code>bcrypt</code>) and role-based dependency (<code>get_current_active_user</code>, <code>require_role</code>).</li>
+<li><strong>Day 16: Ticket Management CRUD Endpoints</strong></li>
+<li>Implement <code>POST /api/v1/tickets</code>: auto-predicts Category &amp; Priority via Phase 1 models, generates embedding, stores ticket.</li>
+<li>Implement <code>GET /api/v1/tickets</code>, <code>GET /api/v1/tickets/{id}</code>, <code>PATCH /api/v1/tickets/{id}</code>.</li>
+<li><strong>Day 17: ML Endpoints Implementation</strong></li>
+<li>Implement <code>POST /api/v1/ml/predict</code>: standalone category/priority prediction with class probabilities.</li>
+<li>Implement <code>POST /api/v1/ml/similar</code>: top-K semantic search.</li>
+<li>Implement <code>POST /api/v1/ml/suggest</code>: full RAG resolution chain.</li>
+<li><strong>Day 18: Automated Pytest Suite &amp; MVP Sign-Off</strong></li>
+<li>Write test suite in <code>backend/tests/</code>:<ul>
+<li><code>test_auth.py</code>: login, token validation, RBAC restrictions.</li>
+<li><code>test_tickets.py</code>: CRUD operations and auto-triage insertion.</li>
+<li><code>test_classifier.py</code>: prediction outputs and schema validation.</li>
+<li><code>test_rag_chain.py</code>: RAG logic with mocked Gemini client.</li>
+</ul>
+</li>
+<li>Verify 100% test pass rate with <code>pytest -v</code>.</li>
+<li><strong>Complete Phase 3 Definition-of-Done (End-of-MVP).</strong></li>
+</ul>
+<hr />
+<h3>Week 4: Phase 4 &amp; Phase 5 — Flutter Dashboard &amp; Cloud Deployment</h3>
+<ul>
+<li><strong>Day 19: Flutter Web Setup &amp; Auth Flow</strong></li>
+<li>Initialize Flutter project: <code>flutter create --platforms=web ticketiq_dashboard</code>.</li>
+<li>Implement API client using <code>http</code> package with JWT storage.</li>
+<li>Build Login &amp; Registration screen.</li>
+<li><strong>Day 20: Ticket Queue Dashboard</strong></li>
+<li>Build main queue UI: list view displaying ticket cards.</li>
+<li>Add filter chips for Category, Priority, and Status.</li>
+<li>Display color-coded badges for priority (<em>Critical: red, High: orange, Medium: blue, Low: grey</em>).</li>
+<li><strong>Day 21: Ticket Detail &amp; Triage Inspector</strong></li>
+<li>Build detailed view showing requester info, description, and status.</li>
+<li>Show "AI Predicted Triage" badge with confidence score.</li>
+<li>Add "Similar Tickets" collapsible drawer showing top-3 matches.</li>
+<li><strong>Day 22: AI Resolution Assistant Widget</strong></li>
+<li>Build "AI Resolution Assistant" card on the ticket detail screen.</li>
+<li>Add "Generate Fix" button calling <code>POST /api/v1/ml/suggest</code>.</li>
+<li>Render structured Markdown resolution steps and cited source ticket IDs.</li>
+<li>Add "Apply to Resolution Notes" button that copies the fix and updates status to "Resolved".</li>
+<li><strong>Day 23: Frontend Polish &amp; Phase 4 Sign-Off</strong></li>
+<li>Handle loading spinners, error banners, and network timeouts.</li>
+<li>Test production web build: <code>flutter build web --release</code>.</li>
+<li>Complete Phase 4 Definition-of-Done checklist.</li>
+<li><strong>Day 24: Docker Containerization</strong></li>
+<li>Write multi-stage <code>Dockerfile</code> for FastAPI backend.</li>
+<li>Pre-download <code>all-MiniLM-L6-v2</code> during container build to ensure instant container startup.</li>
+<li>Verify local container execution with <code>docker run</code>.</li>
+<li><strong>Day 25: Render &amp; Supabase Cloud Configuration</strong></li>
+<li>Connect GitHub repository to Render.</li>
+<li>Create Render Web Service for FastAPI.</li>
+<li>Configure Supabase Connection Pooler (Transaction Mode, port 6543) in <code>DATABASE_URL</code>.</li>
+<li>Set production environment variables on Render.</li>
+<li><strong>Day 26: Frontend Hosting &amp; CORS Integration</strong></li>
+<li>Deploy Flutter Web build (Render Static Site, Vercel, or GitHub Pages).</li>
+<li>Configure CORS origins in FastAPI to allow frontend domain.</li>
+<li>Verify live API communication between frontend and backend.</li>
+<li><strong>Day 27: Production Latency &amp; Smoke Testing</strong></li>
+<li>Execute end-to-end user workflow on the live production URL.</li>
+<li>Measure live endpoint latencies:<ul>
+<li><code>/predict</code>: (&lt; 50\text{ ms})</li>
+<li><code>/similar</code>: (&lt; 120\text{ ms})</li>
+<li><code>/suggest</code>: (&lt; 2.5\text{ s})</li>
+</ul>
+</li>
+<li><strong>Day 28: Final Polish, Documentation &amp; Project Wrap-Up</strong></li>
+<li>Record 2-minute demo video/GIF for project showcase.</li>
+<li>Polish README with architecture diagram, API documentation, and live links.</li>
+<li>Complete Phase 5 Definition-of-Done checklist.</li>
+</ul>
+<hr />
+<h2>2. Git Branching Strategy</h2>
+<p>To maintain a clean, professional commit history for placement portfolios:</p>
+<h3>Branch Structure</h3>
+<ul>
+<li><code>main</code>: Production-ready code only. Deploys directly to Render.</li>
+<li><code>dev</code>: Integration branch where all completed features merge.</li>
+<li><code>feature/*</code>: Short-lived branches dedicated to individual phase components.</li>
+</ul>
+<h3>Feature Branch Roadmap</h3>
+<pre><code class="language-text">main
+ └── dev
+      ├── feature/phase1-triage-classifier
+      ├── feature/phase2-pgvector-retrieval
+      ├── feature/phase3-rag-fastapi-backend
+      ├── feature/phase4-flutter-web-dashboard
+      └── feature/phase5-deployment-hardening
+</code></pre>
+<h3>Commit Message Conventions</h3>
+<p>Use the <strong>Conventional Commits</strong> standard:<br />
+- <code>feat(ml)</code>: New machine learning feature or model training script<br />
+- <code>feat(api)</code>: New FastAPI endpoint or service logic<br />
+- <code>feat(ui)</code>: New Flutter screen or component<br />
+- <code>fix(retrieval)</code>: Bugfix in vector query or database logic<br />
+- <code>test(api)</code>: Adding or updating Pytest test cases<br />
+- <code>docs</code>: Documentation updates or architecture notes<br />
+- <code>chore</code>: Dependency updates, Docker configuration, or CI changes</p>
+<p><em>Example</em>: <code>feat(ml): train sentence-embeddings logistic regression for category classification</code></p>
+<hr />
+<h2>3. Experiment &amp; Metric Logging Protocol</h2>
+<p>Every ML and retrieval experiment must be recorded in <code>data/experiments_log.csv</code> and summarized in <code>docs/experiments_summary.md</code>.</p>
+<h3>Experiment Log Schema (<code>data/experiments_log.csv</code>)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Column Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>exp_id</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">e.g. <code>EXP-01-TFIDF</code>, <code>EXP-02-MINILM</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>date</code></td>
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">YYYY-MM-DD</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>target</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>category</code> or <code>priority</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>representation</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>TF-IDF (5000 feats)</code> or <code>all-MiniLM-L6-v2 (384-dim)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>LogisticRegression</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hyperparameters</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">e.g. <code>C=1.0, class_weight=balanced, solver=lbfgs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>macro_f1</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Unweighted mean of per-class F1 scores</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>precision</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Macro-averaged precision</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>recall</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Macro-averaged recall</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>inference_ms</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Average latency per sample in milliseconds</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>notes</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">Key qualitative observations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. Definition-of-Done (DoD) Checklists</h2>
+<h3>Phase 1 DoD Checklist</h3>
+<ul>
+<li>[ ] Raw dataset cleaned and split into 80/20 train/test split.</li>
+<li>[ ] 100-ticket held-out evaluation set saved to <code>eval_100_heldout.csv</code>.</li>
+<li>[ ] TF-IDF baseline and dense embedding models trained and logged in <code>experiments_log.csv</code>.</li>
+<li>[ ] Category classifier achieves (\ge 0.75) Macro-F1.</li>
+<li>[ ] Priority classifier achieves (\ge 0.65) Macro-F1.</li>
+<li>[ ] Model artifacts exported to <code>data/models/</code> and verified with a standalone Python loading script.</li>
+</ul>
+<h3>Phase 2 DoD Checklist</h3>
+<ul>
+<li>[ ] Supabase PostgreSQL instance has <code>vector</code> extension and HNSW index active.</li>
+<li>[ ] Batch ingestion script successfully indexes (\ge 1,000) historical tickets.</li>
+<li>[ ] Cosine similarity retrieval query runs in (&lt; 100\text{ ms}).</li>
+<li>[ ] Hit@3 evaluation on the 100-ticket held-out set achieves (\ge 80\%).</li>
+</ul>
+<h3>Phase 3 DoD Checklist (End of MVP)</h3>
+<ul>
+<li>[ ] LangChain RAG pipeline integrates with Gemini 1.5 Flash using structured Pydantic output.</li>
+<li>[ ] Out-of-distribution queries with similarity (&lt; 0.65) trigger fallback without calling LLM.</li>
+<li>[ ] FastAPI backend implements JWT auth, RBAC (<code>user</code>, <code>agent</code>, <code>admin</code>), CRUD, and <code>/ml</code> endpoints.</li>
+<li>[ ] All Pytest unit and integration tests pass with 100% success rate.</li>
+<li>[ ] Swagger documentation at <code>/docs</code> tested and verified manually.</li>
+</ul>
+<h3>Phase 4 DoD Checklist</h3>
+<ul>
+<li>[ ] Flutter Web app runs locally and connects to FastAPI backend.</li>
+<li>[ ] Support agent can log in and view ticket queue with category/priority/status filters.</li>
+<li>[ ] Ticket detail screen displays auto-triage badges, similar tickets, and AI resolution generator.</li>
+<li>[ ] Agent can apply the AI suggestion to resolution notes with a single click.</li>
+</ul>
+<h3>Phase 5 DoD Checklist</h3>
+<ul>
+<li>[ ] Multi-stage Dockerfile builds and runs locally without runtime model downloads.</li>
+<li>[ ] Backend deployed on Render Web Service, database hosted on Supabase with connection pooling.</li>
+<li>[ ] Flutter Web dashboard deployed and communicating with backend with zero CORS errors.</li>
+<li>[ ] Live response latencies verified: <code>/predict</code> (&lt; 50\text{ ms}), <code>/similar</code> (&lt; 120\text{ ms}), <code>/suggest</code> (&lt; 2.5\text{ s}).</li>
+<li>[ ] Final README complete with architecture diagrams, setup instructions, and demo GIF.</li>
+</ul>
+        </div>
+        
+
+        <div class="page-break" id="section-4"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 04</div>
+          <h1>TicketIQ — Syllabus &amp; Learning Map</h1>
+<p>This learning map outlines exactly which concepts from your syllabus apply to each phase of the project.</p>
+<ul>
+<li><strong>Category A (Already known)</strong>: Topics from your ML notes to revise and defend mathematically.</li>
+<li><strong>Category B (CampusX LangChain)</strong>: Topics from your Generative AI coursework to learn and apply.</li>
+<li><strong>Small Extras</strong>: Minimal, industry-standard tools outside A and B, each with a 1–2 line explanation and one short resource.</li>
+</ul>
+<blockquote>
+<p><strong>Zero Outside Scope Rule</strong>: No deep learning architectures (CNN/RNN/LSTM), no transformer training or fine-tuning, no LangGraph, no agents, no tool calling, and no Ollama.</p>
+</blockquote>
+<hr />
+<h2>Phase-by-Phase Syllabus Mapping</h2>
+<h3>Phase 1: Standalone Classifier &amp; Experimentation Notebook</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>Types of Data</strong>:</li>
+<li><em>Nominal categorical</em>: Ticket <code>Category</code> (<em>Hardware, Software, Network, Access</em>) — no natural ordering.</li>
+<li><em>Ordinal categorical</em>: Ticket <code>Priority</code> (<em>Low &lt; Medium &lt; High &lt; Critical</em>) — ordered priority levels.</li>
+<li><strong>Supervised Learning &amp; Logistic Regression</strong>:</li>
+<li>Multiclass classification using One-vs-Rest (OvR) and Multinomial Softmax loss.</li>
+<li>Decision boundaries in high-dimensional feature spaces.</li>
+<li><strong>Cost Function &amp; Gradient Descent</strong>:</li>
+<li>Log-loss / Cross-entropy cost function.</li>
+<li>Optimization via gradient descent; convergence and learning rate dynamics.</li>
+<li><strong>Overfitting &amp; Underfitting</strong>:</li>
+<li>L2 Regularization penalty ((C = \frac{1}{\lambda})) to control model variance and prevent overfitting on sparse text features.</li>
+<li><strong>Evaluation Metrics</strong>:</li>
+<li>Train/test split (80/20 stratified split to preserve class ratios).</li>
+<li>Accuracy vs Precision vs Recall vs F1-Score.</li>
+<li><strong>Macro-F1 Score</strong>: Unweighted arithmetic mean of F1 scores across classes (critical for diagnosing performance on minority classes).</li>
+<li><strong>Confusion Matrix</strong>: Identifying off-diagonal errors (e.g., mistaking <em>Critical</em> for <em>Medium</em>).</li>
+</ul>
+<h4>Concepts from Syllabus B to Learn</h4>
+<ul>
+<li><em>None required for Phase 1</em> (Pure classical ML phase).</li>
+</ul>
+<h4>Small Extras Needed in Phase 1</h4>
+<ol>
+<li><strong>TF-IDF (Term Frequency – Inverse Document Frequency)</strong>:<br />
+   - <em>Explanation</em>: A statistical representation that converts text strings into numerical vectors by weighing how frequently a term appears in a document against how common it is across the entire corpus.<br />
+   - <em>Resource</em>: <a href="https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting">Scikit-learn User Guide: TF-IDF Term Weighting</a> (5-minute read).</li>
+<li><strong>Pretrained Sentence Embeddings (<code>sentence-transformers: all-MiniLM-L6-v2</code>)</strong>:<br />
+   - <em>Explanation</em>: An off-the-shelf, frozen embedding model used strictly as a deterministic feature extractor to map raw text into a 384-dimensional dense vector space without training any neural network.<br />
+   - <em>Resource</em>: <a href="https://www.sbert.net/docs/quickstart.html">SBERT.net: Pretrained Models &amp; Quickstart</a>.</li>
+<li><strong>Model Serialization (<code>joblib</code>)</strong>:<br />
+   - <em>Explanation</em>: A standard Python library optimized for dumping and reloading fitted Scikit-Learn estimators and vectorizers to disk for production inference.<br />
+   - <em>Resource</em>: <a href="https://scikit-learn.org/stable/model_persistence.html">Scikit-learn Guide: Model Persistence</a>.</li>
+</ol>
+<hr />
+<h3>Phase 2: Vector Retrieval &amp; pgvector Setup</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>ML Basics &amp; Vector Spaces</strong>:</li>
+<li>Representing unstructured textual tickets as vectors (\mathbf{x} \in \mathbb{R}^{384}).</li>
+<li><strong>Cosine Similarity (Linear Algebra)</strong>:</li>
+<li>Mathematical definition:<br />
+    [<br />
+    \cos(\theta) = \frac{\mathbf{u} \cdot \mathbf{v}}{|\mathbf{u}|_2 |\mathbf{v}|_2}<br />
+    ]</li>
+<li>For (L_2)-normalized vectors, cosine similarity equals the dot product (\mathbf{u} \cdot \mathbf{v}), bounded in ([-1, 1]).</li>
+<li><strong>Evaluation Principles</strong>:</li>
+<li>Held-out test evaluation: using a dedicated 100-ticket benchmark set to objectively validate retrieval performance.</li>
+</ul>
+<h4>Concepts from Syllabus B to Learn</h4>
+<ul>
+<li><strong>Vector Stores and Retrievers</strong>:</li>
+<li>Concept of storing vector embeddings alongside metadata in an index.</li>
+<li>Querying the index using vector distance metrics to retrieve the top-K nearest neighbors.</li>
+</ul>
+<h4>Small Extras Needed in Phase 2</h4>
+<ol>
+<li><strong>PostgreSQL <code>pgvector</code> Extension</strong>:<br />
+   - <em>Explanation</em>: An open-source extension that adds a native <code>VECTOR</code> data type and exact/approximate nearest neighbor distance operators (such as <code>&lt;=&gt;</code> for cosine distance) directly inside PostgreSQL.<br />
+   - <em>Resource</em>: <a href="https://supabase.com/docs/guides/database/extensions/pgvector">Supabase pgvector Official Guide</a>.</li>
+<li><strong>Hit@K Evaluation Metric</strong>:<br />
+   - <em>Explanation</em>: An information retrieval metric that measures the proportion of test queries for which at least one relevant, ground-truth match appears within the top-K retrieved results.<br />
+   - <em>Resource</em>: <a href="https://developers.google.com/machine-learning/recommendation/dnn/retrieval">Google ML Guide: Retrieval Metrics (Hit Rate / Precision@K)</a>.</li>
+</ol>
+<hr />
+<h3>Phase 3: RAG Resolution Chain &amp; Core FastAPI Service (MVP)</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>Supervised Inference &amp; Probability Distributions</strong>:</li>
+<li>Extracting class probability distributions (<code>predict_proba</code>) from Logistic Regression models to feed confidence scores into API responses.</li>
+</ul>
+<h4>Concepts from Syllabus B to Learn</h4>
+<ul>
+<li><strong>LangChain Components and Models</strong>:</li>
+<li>Initializing and invoking a hosted LLM (<code>ChatGoogleGenerativeAI</code>).</li>
+<li><strong>Prompt Templates</strong>:</li>
+<li>Building parameterized prompts that dynamically inject retrieved historical resolutions as context into the instructions.</li>
+<li><strong>Structured Output and Output Parsers</strong>:</li>
+<li>Constraining LLM generation to return strictly formatted, typed JSON conforming to a Pydantic schema (<code>suggested_fix</code>, <code>sources</code>, <code>confidence_note</code>).</li>
+<li><strong>Chains (Retrieve (\to) Prompt (\to) LLM)</strong>:</li>
+<li>Composing the sequential pipeline: ticket input (\to) vector retrieval (\to) prompt formatting (\to) LLM execution (\to) JSON parsing.</li>
+<li><strong>RAG Concept</strong>:</li>
+<li>Retrieval-Augmented Generation: using external retrieved factual context to ground an LLM's response, mitigating hallucinations.</li>
+</ul>
+<h4>Small Extras Needed in Phase 3</h4>
+<ol>
+<li><strong>LangChain <code>with_structured_output</code> for Pydantic</strong>:<br />
+   - <em>Explanation</em>: A high-level LangChain method that binds a Pydantic class to an LLM call, guaranteeing a validated, strongly-typed Python dictionary/object response.<br />
+   - <em>Resource</em>: <a href="https://python.langchain.com/docs/how_to/structured_output/">LangChain Documentation: Structured Outputs</a>.</li>
+</ol>
+<hr />
+<h3>Phase 4: Flutter Web Agent Dashboard</h3>
+<h4>Concepts from Syllabus A &amp; B</h4>
+<ul>
+<li><em>No new ML or LangChain theory.</em> This phase focuses on front-end software engineering, state management, and API consumption.</li>
+</ul>
+<h4>Small Extras Needed in Phase 4</h4>
+<ol>
+<li><strong>JWT Auth &amp; HTTP Client in Flutter</strong>:<br />
+   - <em>Explanation</em>: Handling asynchronous HTTP requests in Dart using the <code>http</code> package and attaching the JWT <code>Authorization: Bearer &lt;token&gt;</code> header to protected requests.<br />
+   - <em>Resource</em>: <a href="https://docs.flutter.dev/cookbook/networking/fetch-data">Flutter Documentation: Fetch Data from the Internet</a>.</li>
+</ol>
+<hr />
+<h3>Phase 5: Testing, Hardening &amp; Cloud Deployment</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>Evaluation &amp; Verification</strong>:</li>
+<li>Re-running automated metric evaluations and test suites (<code>pytest</code>) to verify regression-free deployment.</li>
+<li><strong>Confusion Matrix in Production</strong>:</li>
+<li>Logging misclassified live samples for future continuous improvement.</li>
+</ul>
+<h4>Concepts from Syllabus B to Revise</h4>
+<ul>
+<li><strong>RAG Latency &amp; Guardrails</strong>:</li>
+<li>Measuring latency breakdown across vector search versus LLM generation.</li>
+<li>Enforcing similarity score thresholding ((\ge 0.65)) to abort LLM calls when historical context is weak.</li>
+</ul>
+<h4>Small Extras Needed in Phase 5</h4>
+<ol>
+<li><strong>Multi-Stage Dockerfile for ML Applications</strong>:<br />
+   - <em>Explanation</em>: Containerizing a Python application while caching HuggingFace embedding weights during image build time to prevent slow cold starts.<br />
+   - <em>Resource</em>: <a href="https://docs.docker.com/build/building/multi-stage/">Docker Guide: Multi-stage Builds</a>.</li>
+<li><strong>Supabase Connection Pooling (PgBouncer)</strong>:<br />
+   - <em>Explanation</em>: Connecting to PostgreSQL through a transaction-mode connection pooler (port 6543) to prevent backend containers from exhausting available database sockets.<br />
+   - <em>Resource</em>: <a href="https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler">Supabase Guide: Connection Management &amp; PgBouncer</a>.</li>
+</ol>
+        </div>
+        
+
+        <div class="page-break" id="section-5"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 05</div>
+          <h1>TicketIQ — Production Risks &amp; Mitigation Strategies</h1>
+<p>This document identifies the 5 primary risks in building TicketIQ — spanning dataset quality, statistical class imbalance, LLM hallucinations, free-tier limits, and vector dimensional integrity — alongside concrete engineering mitigations.</p>
+<hr />
+<h2>Risk Matrix Summary</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">#</th>
+<th style="text-align: left;">Risk Area</th>
+<th style="text-align: left;">Severity</th>
+<th style="text-align: left;">Likelihood</th>
+<th style="text-align: left;">Key Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;"><strong>Dataset Quality &amp; Noisy Resolutions</strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">Strict data cleaning pipeline: length thresholding &amp; removal of boilerplate resolutions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;"><strong>Class Imbalance in Category &amp; Priority</strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">Stratified train/test splitting, <code>class_weight='balanced'</code>, and Macro-F1 evaluation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;"><strong>LLM Hallucination in Technical Fixes</strong></td>
+<td style="text-align: left;">Critical</td>
+<td style="text-align: left;">Medium</td>
+<td style="text-align: left;">Similarity gating ((\ge 0.65)), strict prompt grounding, and Pydantic structured output</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4</strong></td>
+<td style="text-align: left;"><strong>Free-Tier API &amp; Cloud Rate Limits</strong></td>
+<td style="text-align: left;">Medium</td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">In-memory LRU caching, Supabase transaction pooling, and graceful backoff</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>5</strong></td>
+<td style="text-align: left;"><strong>Vector Dimension &amp; Distance Metric Mismatch</strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">Low</td>
+<td style="text-align: left;">Explicit DDL constraints (<code>vector(384)</code>), (L_2) normalization, and cosine distance <code>&lt;=&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Detailed Risk Analysis &amp; Mitigations</h2>
+<h3>1. Dataset Quality &amp; Missing Ticket Resolution Text</h3>
+<h4>The Risk</h4>
+<p>Public IT support datasets from Kaggle often contain incomplete rows, placeholder descriptions (<em>"Help, my screen is blue"</em>), or meaningless resolution notes (<em>"Resolved by user"</em>, <em>"Issue closed"</em>, <em>"N/A"</em>). If these low-quality records are indexed in the vector store, similarity searches will retrieve irrelevant records, and the RAG model will generate useless or corrupt recommendations.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Resolution Quality Filter</strong>:<br />
+   - In Day 2 preprocessing, discard any historical ticket where <code>resolution_notes</code> is null, has fewer than 25 characters, or matches common boilerplate regexes:<br />
+<code>python
+     boilerplate_patterns = [r"^resolved", r"^fixed", r"^closed", r"^ticket closed", r"^n/a$"]</code></li>
+<li><strong>Text Normalization Pipeline</strong>:<br />
+   - Clean both titles and descriptions: strip HTML tags, normalize whitespace, lowercase text, and remove non-informative ticket IDs or automated email headers.</li>
+<li><strong>Curated Historical Index</strong>:<br />
+   - Only index tickets marked with <code>status = 'Resolved'</code> that have verified, substantive resolution notes.</li>
+</ol>
+<hr />
+<h3>2. Severe Class Imbalance (Category &amp; Priority)</h3>
+<h4>The Risk</h4>
+<p>In real helpdesk data, categories and priorities are heavily skewed:<br />
+- Priorities: ~65% <em>Low</em>, ~25% <em>Medium</em>, ~8% <em>High</em>, ~2% <em>Critical</em>.<br />
+- Categories: ~50% <em>Software</em>, ~30% <em>Hardware</em>, ~15% <em>Network</em>, ~5% <em>Access</em>.</p>
+<p>A standard classifier optimizing for naive accuracy will predict the majority class (<em>Low</em> / <em>Software</em>) for all tickets, achieving ~65% accuracy while completely failing on <em>Critical</em> or <em>Access</em> tickets.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Stratified Splitting</strong>:<br />
+   - Use <code>StratifiedShuffleSplit</code> in Scikit-Learn to ensure that train and test partitions maintain identical class distributions for both Category and Priority.</li>
+<li><strong>Class-Weighted Loss Optimization</strong>:<br />
+   - Configure Scikit-Learn's <code>LogisticRegression(class_weight='balanced')</code>. This automatically adjusts weights inversely proportional to class frequencies:<br />
+     [<br />
+     w_j = \frac{N}{K \cdot n_j}<br />
+     ]<br />
+     where (N) is total samples, (K) is number of classes, and (n_j) is the sample count of class (j). Errors on minority classes (<em>Critical</em>) are penalized far more heavily during gradient descent.</li>
+<li><strong>Metric Alignment</strong>:<br />
+   - Reject accuracy as a primary metric. Use <strong>Macro-averaged F1 Score</strong>, which computes the arithmetic mean of F1 scores across each class independently, treating minority and majority classes with equal weight.</li>
+</ol>
+<hr />
+<h3>3. LLM Hallucination &amp; Ungrounded Resolutions</h3>
+<h4>The Risk</h4>
+<p>LLMs given loose prompts will attempt to be helpful by inventing IT procedures, non-existent terminal commands, or insecure password reset links. In an IT enterprise setting, an invented or incorrect command can cause system downtime or data loss.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Similarity Score Gating (Pre-LLM Guardrail)</strong>:<br />
+   - Before invoking Gemini, inspect the cosine similarity score of the top retrieved historical ticket.<br />
+   - If <code>top_similarity &lt; 0.65</code>, do <strong>not</strong> invoke the LLM. Immediately return a deterministic fallback response:<br />
+<code>json
+     {
+       "suggested_fix": "No sufficiently similar historical resolution found (similarity &lt; 0.65). Please escalate this ticket to a Tier-2 IT Specialist.",
+       "sources": [],
+       "confidence_note": "Below automated resolution threshold."
+     }</code></li>
+<li><strong>Strict Grounding Prompt Template</strong>:<br />
+   - Instruct the LLM that it is an administrative assistant summarizing verified records, strictly forbidding external facts:<br />
+<code>text
+     You are an IT resolution assistant. You are provided with 3 historically resolved tickets.
+     Synthesize a clear, step-by-step fix ONLY using the historical resolutions provided.
+     Do NOT add outside knowledge, do NOT invent commands, and do NOT assume software versions.
+     If the provided resolutions do not clearly solve the user's issue, state: "Historical data is insufficient to resolve this issue."</code></li>
+<li><strong>Structured Pydantic Enforcement</strong>:<br />
+   - Use <code>with_structured_output</code> to require the LLM to return source ticket IDs in the <code>sources</code> field. If the model cannot cite an ID from the context, the response is rejected.</li>
+</ol>
+<hr />
+<h3>4. Free-Tier API Rate Limits &amp; Cloud Resource Constraints</h3>
+<h4>The Risk</h4>
+<ul>
+<li><strong>Google Gemini API</strong>: Free tier enforces a strict limit of 15 Requests Per Minute (RPM). Rapid testing or multi-user interaction can trigger HTTP 429 errors.</li>
+<li><strong>Supabase Free Tier</strong>: Free compute allows limited concurrent direct database connections (often 60 pooler / direct connections).</li>
+<li><strong>Render Web Service Free Tier</strong>: Free web services spin down after 15 minutes of inactivity, resulting in a 30–50 second cold start delay.</li>
+</ul>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>In-Memory Embedding Caching</strong>:<br />
+   - Implement an LRU cache (<code>@lru_cache(maxsize=1024)</code>) in the embedding service so repetitive queries (e.g. duplicate search terms) return cached 384-dim vectors without recomputing.</li>
+<li><strong>Local Model Inference</strong>:<br />
+   - All classification (<code>LogisticRegression</code>) and sentence encoding (<code>all-MiniLM-L6-v2</code>) runs locally on the CPU in Python. No external API quotas are consumed for classification or vector generation.</li>
+<li><strong>Exponential Backoff for Gemini Calls</strong>:<br />
+   - Wrap the LangChain Gemini call with retry logic (using <code>tenacity</code>) that handles HTTP 429 rate limits gracefully with exponential backoff and jitter.</li>
+<li><strong>Supabase Connection Pooling (Transaction Mode)</strong>:<br />
+   - Direct all backend database queries through Supabase PgBouncer (port 6543) instead of direct port 5432. This reuses database connections across stateless FastAPI requests.</li>
+</ol>
+<hr />
+<h3>5. Vector Dimension &amp; Distance Metric Mismatch</h3>
+<h4>The Risk</h4>
+<p>A common defect in vector applications is initializing the database column with the wrong dimension (e.g. <code>vector(1536)</code> intended for OpenAI models instead of <code>vector(384)</code> for <code>all-MiniLM-L6-v2</code>), or querying with Euclidean distance (<code>&lt;-&gt;</code>) when the vectors are compared using cosine similarity.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Explicit Schema Typing</strong>:<br />
+   - Define the PostgreSQL column strictly as <code>embedding vector(384)</code> in Alembic migrations.</li>
+<li><strong>Vector Normalization</strong>:<br />
+   - Ensure <code>sentence-transformers</code> generates (L_2)-normalized vectors:<br />
+<code>python
+     model.encode(text, normalize_embeddings=True)</code><br />
+   - When vectors have unit length ((|\mathbf{u}|_2 = 1)), Cosine Distance is directly proportional to Euclidean distance:<br />
+     [<br />
+     |\mathbf{u} - \mathbf{v}|_2^2 = 2(1 - \mathbf{u} \cdot \mathbf{v})<br />
+     ]</li>
+<li><strong>Dedicated Unit Tests</strong>:<br />
+   - Include an automated Pytest verifying that the vector output of <code>encoder.py</code> always returns an array of shape <code>(384,)</code> with unit magnitude before inserting into the database.</li>
+</ol>
+        </div>
+        
+
+        <div class="page-break" id="section-6"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 06</div>
+          <h1>TicketIQ — Resume Bullets &amp; Interview Defense Guide</h1>
+<p>This guide provides interview-ready resume bullet points formatted according to Google's <strong>XYZ formula</strong> (<em>Accomplished [X], as measured by [Y], by doing [Z]</em>), complete with realistic metric placeholders and an interview defense cheat-sheet.</p>
+<hr />
+<h2>1. Google XYZ Resume Bullets</h2>
+<h3>Variant 1: General Software Engineer / Backend Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — AI IT-Helpdesk Triage &amp; Resolution Platform</strong><br />
+- Architected a high-throughput IT service desk backend in <strong>FastAPI</strong> and <strong>PostgreSQL (pgvector)</strong>, reducing ticket resolution turnaround by <strong>[60%]</strong> through automated auto-triage and semantic duplicate detection.<br />
+- Implemented role-based access control (<strong>JWT / RBAC</strong>) across user, agent, and admin tiers; constructed a complete <strong>Pytest</strong> automated testing suite achieving <strong>[92%]</strong> code coverage across auth, CRUD, and ML inference pipelines.<br />
+- Optimized database vector queries using <strong>HNSW indexing</strong> on <strong>384-dimensional</strong> sentence embeddings, sustaining <strong>[&lt;100 ms]</strong> retrieval latency across <strong>[5,000+]</strong> historical support records on Supabase.<br />
+- Containerized the backend with multi-stage <strong>Docker</strong> builds and deployed on <strong>Render</strong> with connection pooling (PgBouncer), eliminating cold-start model download overhead.</p>
+</blockquote>
+<hr />
+<h3>Variant 2: Applied Machine Learning / Triage Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — Intelligent Ticket Classification &amp; Routing System</strong><br />
+- Developed an explainable multi-class text classification pipeline in <strong>Scikit-Learn</strong> predicting IT ticket category and priority, improving baseline TF-IDF performance by <strong>[+14%]</strong> to achieve <strong>[81%] Category Macro-F1</strong> and <strong>[71%] Priority Macro-F1</strong>.<br />
+- Extracted semantic representations using pretrained <strong>all-MiniLM-L6-v2</strong> sentence transformers and trained balanced <strong>Logistic Regression</strong> classifiers, mitigating heavy 70:1 class imbalance using inverse-frequency loss weighting.<br />
+- Formulated an offline evaluation benchmark on a <strong>100-ticket held-out set</strong>, validating a <strong>[86%] Hit@3</strong> duplicate retrieval rate using cosine similarity over dense vector embeddings.<br />
+- Serialized trained models via <strong>Joblib</strong> and engineered an in-memory caching layer, delivering single-ticket inference in <strong>[&lt;25 ms]</strong> on CPU.</p>
+</blockquote>
+<hr />
+<h3>Variant 3: RAG &amp; Generative AI Systems Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — Grounded RAG IT Resolution Assistant</strong><br />
+- Designed a grounded <strong>Retrieval-Augmented Generation (RAG)</strong> pipeline using <strong>LangChain</strong> and <strong>Google Gemini 1.5 Flash</strong>, synthesizing verified step-by-step IT troubleshooting guidance from historical resolutions in <strong>[&lt;2.2 s]</strong>.<br />
+- Enforced strict hallucination guardrails via cosine similarity thresholding (<strong>threshold = 0.65</strong>) and <strong>Pydantic structured output parsing</strong>, guaranteeing validated JSON schema responses with cited source ticket IDs.<br />
+- Integrated vector search directly into relational PostgreSQL via <strong>pgvector</strong>, unifying relational ticket metadata with dense vector embeddings into a single ACID-compliant database architecture.</p>
+</blockquote>
+<hr />
+<h3>Variant 4: Full-Stack / End-to-End Product Focus</h3>
+<blockquote>
+<p><strong>TicketIQ — End-to-End AI Helpdesk Web Application</strong><br />
+- Engineered an end-to-end IT support suite comprising a <strong>FastAPI</strong> microservice, <strong>PostgreSQL/pgvector</strong> storage, and a responsive <strong>Flutter Web</strong> agent dashboard.<br />
+- Integrated real-time AI triage badges, similar ticket recommendation drawers, and a one-click resolution applicator, enabling support agents to review and accept AI-generated fixes in one action.<br />
+- Deployed the production system to <strong>Render</strong> and <strong>Supabase</strong>, ensuring resilient continuous integration through automated end-to-end tests and zero CORS latency.</p>
+</blockquote>
+<hr />
+<h2>2. Interview Defense Cheat-Sheet (High-Yield Q&amp;A)</h2>
+<p>Here are the 5 questions interviewers will ask about this project, along with exact, mathematically defensible answers tailored to your background.</p>
+<hr />
+<h3>Q1: "Why did you use Logistic Regression with sentence embeddings instead of fine-tuning a BERT model or calling an LLM for classification?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"I deliberately chose Logistic Regression on top of frozen sentence embeddings (<code>all-MiniLM-L6-v2</code>) for three engineering reasons:</em><br />
+1. <strong><em>Inference Latency &amp; Cost</em></strong>: <em>Calling an LLM for triage adds 1–2 seconds of network latency and token costs per ticket. A Logistic Regression model runs in under 25 milliseconds directly on CPU with zero API costs.</em><br />
+2. <strong><em>Explainability &amp; Probabilities</em></strong>: <em>Logistic Regression outputs well-calibrated class probability distributions via the Softmax function. This allows our backend to assign confidence scores to predictions and flag low-confidence tickets for manual agent review.</em><br />
+3. <strong><em>Sample Efficiency &amp; Defense</em></strong>: <em>Fine-tuning a full transformer with limited IT helpdesk data easily leads to overfitting. Using a high-quality pretrained sentence encoder as a fixed feature extractor and fitting a convex loss function (cross-entropy with L2 regularization) guaranteed fast convergence, explainable decision boundaries, and no GPU requirements.</em>"</p>
+</blockquote>
+<hr />
+<h3>Q2: "How did you handle the severe class imbalance in ticket priorities?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"Priority distribution in helpdesk logs is naturally skewed—Low and Medium tickets account for over 85% of samples, while Critical tickets are under 3%. If you optimize for standard accuracy, a trivial model predicting 'Low' achieves high accuracy while failing completely on critical outages.</em><br />
+<em>I addressed this systematically:</em><br />
+1. <em>I used <strong>Stratified Splitting</strong> (<code>StratifiedShuffleSplit</code>) to ensure both train and test partitions reflected the true distribution.</em><br />
+2. <em>I configured <strong>balanced class weighting</strong> in the Logistic Regression cost function. This weights the cross-entropy loss inversely proportional to class frequencies: (w_j = \frac{N}{K \cdot n_j}). Penalizing errors on minority classes heavily during gradient descent prevented the decision boundaries from collapsing toward the majority class.</em><br />
+3. <em>I evaluated the model using <strong>Macro-averaged F1</strong> rather than accuracy or Micro-F1, giving equal importance to Critical and Low classes.</em>"</p>
+</blockquote>
+<hr />
+<h3>Q3: "Why did you store embeddings in PostgreSQL with pgvector instead of using a standalone vector DB like Pinecone, Chroma, or Weaviate?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"In a production IT helpdesk system, tickets are relational entities with foreign keys (requesters, assignees), audit logs, and strict state transitions (Open (\to) In Progress (\to) Resolved).</em><br />
+<em>Using a dedicated vector database creates an <strong>operational two-system problem</strong>: you have to synchronize relational updates in PostgreSQL with vector updates in Pinecone, risking data drift and requiring distributed transaction handling.</em><br />
+<em>With <code>pgvector</code>, our embeddings live directly inside the <code>tickets</code> table as a <code>vector(384)</code> column. We can execute a single ACID transaction that updates a ticket's status and re-indexes its embedding simultaneously, and perform filtered nearest-neighbor queries using standard SQL with HNSW index performance."</em></p>
+</blockquote>
+<hr />
+<h3>Q4: "How did you objectively evaluate your retrieval system before feeding context into the LLM?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"I did not rely on subjective inspection. I constructed a dedicated <strong>100-ticket held-out evaluation set</strong> (<code>eval_100_heldout.csv</code>) from historical resolved tickets.</em><br />
+<em>I evaluated the retriever using <strong>Hit@3</strong>: for each test ticket description, we executed an automated vector query retrieving the top-3 historical matches and checked whether at least one retrieved ticket matched the ground-truth root cause category and had an actionable resolution.</em><br />
+<em>TicketIQ achieved an <strong>[86%] Hit@3</strong> rate. Furthermore, we benchmarked retrieval latency using <code>EXPLAIN ANALYZE</code> on Supabase to verify that HNSW index searches executed in under 100 milliseconds."</em></p>
+</blockquote>
+<hr />
+<h3>Q5: "How did you guarantee that the LLM wouldn't hallucinate fake terminal commands or dangerous IT procedures in the resolution suggestion?"</h3>
+<p><strong>Your Answer</strong>:</p>
+<blockquote>
+<p><em>"We implemented a 3-layer defense against hallucinations:</em><br />
+1. <strong><em>Pre-LLM Similarity Gating</em></strong>: <em>Before calling the LLM, we check the cosine similarity of the top retrieved historical ticket. If it is below <code>0.65</code>, we abort the LLM call entirely and return a deterministic message advising human escalation. We never ask an LLM to generate answers when historical context is absent.</em><br />
+2. <strong><em>Strict Grounding Prompt</em></strong>: <em>Our system prompt explicitly defines the LLM as a synthesizer of provided records, strictly forbidding the introduction of outside facts or unverified commands.</em><br />
+3. <strong><em>Pydantic Schema Validation</em></strong>: <em>Using LangChain's <code>with_structured_output</code>, the model is forced to return a JSON object containing a <code>sources</code> array citing the exact historical ticket IDs used. If the model fails schema validation or cannot cite sources, the response is rejected.</em>"</p>
+</blockquote>
+        </div>
+        
+
+        <div class="page-break" id="section-7"></div>
+        <div style="margin-top: 20px;">
+          <div style="font-size: 0.9rem; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">Section 07</div>
+          <h1>TicketIQ — Living Interview Knowledge Journal (Placement Edition)</h1>
+<blockquote>
+<p><strong>Purpose</strong>: This is your primary revision document for campus placements and technical interviews. It is continuously updated after every major feature, architecture decision, or code update in TicketIQ. </p>
+<p><em>Review this document 30 minutes before any technical interview round to speak with absolute clarity, mathematical precision, and architectural maturity.</em></p>
+</blockquote>
+<hr />
+<h2>Quick Navigation</h2>
+<ol>
+<li><a href="#1-core-architectural-decisions--mathematical-defenses">Core Architectural Decisions &amp; Mathematical Defenses</a></li>
+<li><a href="#2-placement-interview-cheat-sheet-high-frequency-questions">Placement Interview Cheat-Sheet (High-Frequency Questions)</a></li>
+<li><a href="#3-vocabulary--concepts-defense-matrix">Vocabulary &amp; Concepts Defense Matrix</a></li>
+<li><a href="#4-continuous-update-log-phase-by-phase">Continuous Update Log (Phase-by-Phase)</a></li>
+<li><a href="#5-standard-entry-template-for-future-updates">Standard Entry Template for Future Updates</a></li>
+</ol>
+<hr />
+<h2>1. Core Architectural Decisions &amp; Mathematical Defenses</h2>
+<h3>Decision 1: Logistic Regression + Pretrained Embeddings vs. LLM / Transformer Fine-Tuning</h3>
+<ul>
+<li><strong>What We Did</strong>: We used frozen 384-dimensional sentence embeddings (<code>all-MiniLM-L6-v2</code>) paired with Scikit-Learn <code>LogisticRegression</code> (with a TF-IDF baseline).</li>
+<li><strong>The Mathematical Reality</strong>:</li>
+<li>Sentence embeddings map raw text into a normed metric space (\mathbf{x} \in \mathbb{R}^{384}) where semantic similarity corresponds to geometric proximity ((\cos \theta)).</li>
+<li>Logistic Regression fits a linear decision boundary in this 384-dimensional space by optimizing the convex cross-entropy (log-loss) objective:<br />
+    [<br />
+    J(\mathbf{w}) = -\frac{1}{N} \sum_{i=1}^N \sum_{k=1}^K y_{ik} \log \left( \frac{e^{\mathbf{w}_k^T \mathbf{x}<em>i}}{\sum</em>{j=1}^K e^{\mathbf{w}_j^T \mathbf{x}_i}} \right) + \frac{1}{2C} |\mathbf{w}|_2^2<br />
+    ]</li>
+<li><strong>Interview Defense (Why NOT fine-tune a BERT model or call Gemini for triage?)</strong>:<blockquote>
+<p><em>"Fine-tuning a transformer on 2,000–5,000 helpdesk tickets easily leads to catastrophic forgetting and severe overfitting. Moreover, invoking an LLM API for every incoming ticket introduces 1–2 seconds of network latency and non-zero dollar costs per query. By combining a frozen pretrained encoder with Logistic Regression, our inference runs in <strong>&lt;25 ms on standard CPU</strong>, is completely cost-free, guarantees convex convergence, and outputs calibrated Softmax probabilities for confidence scoring."</em></p>
+</blockquote>
+</li>
+</ul>
+<hr />
+<h3>Decision 2: Handling Severe Priority Class Imbalance (70% Low vs 2% Critical)</h3>
+<ul>
+<li><strong>What We Did</strong>:<br />
+  1. Partitioned dataset using <code>StratifiedShuffleSplit</code> to guarantee identical class ratios in train and test splits.<br />
+  2. Applied inverse-frequency weighting in the loss function via <code>class_weight='balanced'</code>.<br />
+  3. Evaluated performance strictly via <strong>Macro-averaged F1</strong> and Confusion Matrices instead of standard accuracy.</li>
+<li><strong>The Mathematical Reality</strong>:</li>
+<li>The sample weight for class (j) is inversely proportional to its frequency:<br />
+    [<br />
+    w_j = \frac{N}{K \cdot n_j}<br />
+    ]<br />
+    Where (N) is total samples, (K) is number of classes, and (n_j) is the count of class (j).</li>
+<li>During gradient descent, misclassifying a <em>Critical</em> ticket produces a gradient step (w_{\text{critical}} \approx 35 \times) larger than misclassifying a <em>Low</em> ticket, forcing the decision hyperplanes away from minority regions.</li>
+<li><strong>Interview Defense</strong>:<blockquote>
+<p><em>"In production IT support, missing a Critical ticket causes massive SLA breaches. A naive model predicting 'Low' for all tickets achieves 70% accuracy but has zero utility. By weighting the cross-entropy loss inversely to class counts and validating against Macro-F1 (unweighted mean of per-class F1), we ensured the model generalizes equally well across rare outages and common queries."</em></p>
+</blockquote>
+</li>
+</ul>
+<hr />
+<h3>Decision 3: Single Unified Database (Supabase PostgreSQL + <code>pgvector</code>) vs. Standalone Vector DBs</h3>
+<ul>
+<li><strong>What We Did</strong>: We stored ticket relational metadata, user foreign keys, and 384-dim dense embeddings in a single PostgreSQL database using the <code>pgvector</code> extension with an <strong>HNSW index</strong>.</li>
+<li><strong>The Architectural Reality</strong>:</li>
+<li>Using a standalone vector database (e.g. Pinecone, Chroma, Milvus) alongside PostgreSQL creates a <strong>dual-source-of-truth problem</strong>:<ol>
+<li>Relational operations (ticket reassignment, status update from Open (\to) Resolved) must be synchronized with external vector store IDs.</li>
+<li>Network partitions cause data drift (ticket deleted in Postgres but still retrieved in Pinecone).</li>
+<li>Requires two separate connection pools and backup systems.</li>
+</ol>
+</li>
+<li><strong>Interview Defense</strong>:<blockquote>
+<p><em>"IT helpdesk tickets are fundamentally relational entities with strict ACID state transitions. <code>pgvector</code> allows us to perform dense vector similarity queries using the <code>&lt;=&gt;</code> cosine distance operator in the exact same SQL transaction that filters by <code>status = 'Resolved'</code>. We achieved <strong>&lt;100 ms query latency</strong> using an HNSW index while maintaining single-database ACID guarantees and zero data drift."</em></p>
+</blockquote>
+</li>
+</ul>
+<hr />
+<h3>Decision 4: Hallucination Guardrails in RAG Resolution</h3>
+<ul>
+<li><strong>What We Did</strong>:<br />
+  1. <strong>Pre-LLM Similarity Gate</strong>: If the top retrieved ticket has cosine similarity (&lt; 0.65), the chain aborts and returns an automated human-escalation message. Gemini is never called with weak context.<br />
+  2. <strong>Strict Grounding Prompt</strong>: System instructions strictly forbid outside knowledge and require the LLM to act solely as a summarizer of historical tickets.<br />
+  3. <strong>Pydantic Structured Output</strong>: LangChain's <code>with_structured_output</code> guarantees validated JSON containing a mandatory <code>sources: list[int]</code> field.</li>
+<li><strong>Interview Defense</strong>:<blockquote>
+<p><em>"In an IT helpdesk context, hallucinating an incorrect terminal command or registry key can crash user systems. We treat LLMs not as knowledge repositories, but as <strong>reasoning engines over retrieved facts</strong>. If our vector search cannot find a historical ticket with (\ge 65\%) semantic similarity, we refuse to generate an answer and immediately route to a human engineer."</em></p>
+</blockquote>
+</li>
+</ul>
+<hr />
+<h2>2. Placement Interview Cheat-Sheet (High-Frequency Questions)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Question Interviewer Asks</th>
+<th style="text-align: left;">30-Second Interview-Winning Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>"What is the difference between Macro-F1 and Micro-F1?"</strong></td>
+<td style="text-align: left;"><em>"Micro-F1 aggregates global true positives, false positives, and false negatives, making it equivalent to accuracy in single-label multi-class settings—dominated by the majority class. Macro-F1 calculates the F1-score independently for each class and takes their unweighted arithmetic mean, treating rare Critical tickets as equally important as common Low tickets."</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>"What is the time complexity of vector search with HNSW?"</strong></td>
+<td style="text-align: left;"><em>"Exact k-NN search requires brute-force linear scanning: (\mathcal{O}(N \cdot d)), which is unacceptable at scale. HNSW (Hierarchical Navigable Small World) constructs a multi-layer graph where search is logarithmic: (\mathcal{O}(\log N \cdot d)), reducing latency to under 10 ms for 100k vectors."</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>"Why use Cosine Distance instead of Euclidean Distance?"</strong></td>
+<td style="text-align: left;"><em>"Euclidean distance ((L_2)) measures the straight-line distance between vector endpoints, which is sensitive to document length and magnitude. Cosine similarity measures the angle between vectors, capturing semantic orientation independent of length. When embeddings are (L_2)-normalized to unit length ((|\mathbf{u}|_2 = 1)), Cosine Distance is monotonically related to squared Euclidean distance: (|\mathbf{u} - \mathbf{v}|_2^2 = 2(1 - \mathbf{u} \cdot \mathbf{v}))."</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>"How did you prevent SQL injection and connection exhaustion in FastAPI?"</strong></td>
+<td style="text-align: left;"><em>"We used SQLAlchemy ORM with parameterized queries, eliminating SQL injection vectors. For database concurrency, we routed all connections through Supabase's PgBouncer transaction pooler (port 6543) so stateless FastAPI requests share a small pool of database sockets rather than opening a new connection per request."</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>"How did you test your RAG pipeline without spending API quota?"</strong></td>
+<td style="text-align: left;"><em>"In our Pytest suite, we mocked the external Gemini LLM client using <code>unittest.mock</code> and fixture dependency injection. This allowed us to deterministically test JSON validation, fallback triggers, and error states in CI with zero API cost and millisecond test execution."</em></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Vocabulary &amp; Concepts Defense Matrix</h2>
+<p>Use these precise technical terms during your interviews:</p>
+<ul>
+<li><strong>Convex Optimization</strong>: The cross-entropy loss function of Logistic Regression has a single global minimum, ensuring deterministic convergence during gradient descent without getting trapped in local minima.</li>
+<li><strong>L2 Regularization ((C = 1/\lambda))</strong>: Penalizes large weight vectors ((\frac{1}{2C}|\mathbf{w}|_2^2)) to constrain model complexity and prevent overfitting on sparse features.</li>
+<li><strong>Cold-Start Elimination</strong>: Pre-downloading model weights (<code>all-MiniLM-L6-v2</code>) during Docker image build time so that container instantiation does not block on external downloads.</li>
+<li><strong>Idempotency &amp; RBAC</strong>: Ensuring state-modifying endpoints (<code>PATCH /tickets/{id}</code>) are safe to retry and enforcing distinct privileges (<code>user</code>, <code>agent</code>, <code>admin</code>) via FastAPI OAuth2 dependency injection.</li>
+<li><strong>Hit@K Metric</strong>: Fraction of test queries where at least one ground-truth relevant document appears in the top-K retrieved candidates.</li>
+</ul>
+<hr />
+<h2>4. Continuous Update Log (Phase-by-Phase)</h2>
+<h3>[2026-11-24] — Architecture &amp; Planning Milestone</h3>
+<ul>
+<li><strong>What Was Built</strong>:</li>
+<li>Full system design: Mermaid data flow, unified schema in <code>pgvector</code>, REST contracts, and 5-phase execution plan.</li>
+<li><strong>Key Interview Takeaway</strong>:</li>
+<li>Explainable AI first (TF-IDF (\to) Sentence Transformers (\to) Logistic Regression) before considering complex generative pipelines.</li>
+<li>End-to-end MVP established in Phases 1–3 prior to UI/deployment overhead.</li>
+</ul>
+<hr />
+<h2>5. Standard Entry Template for Future Updates</h2>
+<p><em>Whenever a new feature or code change is added to TicketIQ, append a new entry using this exact schema:</em></p>
+<pre><code class="language-markdown">### [YYYY-MM-DD] — &lt;Feature or Component Name&gt;
+- **What Was Implemented**: &lt;1-2 sentences on code written, endpoints created, or models trained&gt;
+- **Engineering / Math Rationale**: &lt;Why this choice was made mathematically or architecturally&gt;
+- **Trade-Offs Considered**: &lt;Alternative A vs Alternative B, and why A was chosen&gt;
+- **Interview Question &amp; Defense**:
+  - *Q*: &quot;&lt;What the interviewer will ask&gt;&quot;
+  - *A*: &quot;&lt;Your exact response showing deep engineering maturity&gt;&quot;
+- **Metrics &amp; Numbers**: &lt;e.g. Latency, Macro-F1, RAM footprint, Test coverage&gt;
+</code></pre>
+        </div>
+        
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

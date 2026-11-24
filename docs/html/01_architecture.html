@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Architecture & Design — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  <h1>TicketIQ — System Architecture &amp; Design Specification</h1>
+<p>This document details the complete end-to-end architecture, database schema, API contracts, data flows, and project folder layout for <strong>TicketIQ</strong>, an AI IT-helpdesk triage and resolution assistant.</p>
+<hr />
+<h2>1. High-Level System Architecture</h2>
+<p>TicketIQ separates user-facing ticket management from machine learning inference and retrieval-augmented generation (RAG) while unifying relational ticket data and dense vector embeddings inside PostgreSQL using the <code>pgvector</code> extension.</p>
+<div class="mermaid">
+flowchart TD
+    subgraph Client Tier
+        UI["Flutter Web Agent Dashboard"]
+        Swagger["Swagger UI / Automated Pytest Suite"]
+    end
+
+    subgraph Application Tier [FastAPI Backend on Render]
+        Auth["JWT Auth & RBAC (User, Agent, Admin)"]
+        Router["FastAPI Router (/tickets, /ml)"]
+
+        subgraph Services
+            TriageSvc["Triage Classifier Service\n(Scikit-Learn Logistic Regression)"]
+            EmbedSvc["Embedding Service\n(sentence-transformers: all-MiniLM-L6-v2)"]
+            RAGSvc["RAG Resolution Chain\n(LangChain + Google Gemini 1.5 Flash)"]
+        end
+    end
+
+    subgraph Data Tier [Supabase PostgreSQL + pgvector]
+        UsersTbl[("users table")]
+        TicketsTbl[("tickets table\n(B-Tree + HNSW Vector Index)")]
+    end
+
+    subgraph External Hosted API
+        Gemini["Google Gemini 1.5 Flash API\n(Google AI Studio)"]
+    end
+
+    UI -->|HTTPS / JWT Bearer| Router
+    Swagger -->|HTTPS / JWT Bearer| Router
+    Router --> Auth
+    Router --> TriageSvc
+    Router --> EmbedSvc
+    Router --> RAGSvc
+
+    TriageSvc -->|Loads serialized .joblib| EmbedSvc
+    EmbedSvc -->|Generates 384-dim vector| TicketsTbl
+    RAGSvc -->|Top-3 vector similarity query <=>| TicketsTbl
+    RAGSvc -->|Formatted prompt with context| Gemini
+    Gemini -->|Structured JSON response| RAGSvc
+
+    Router -->|SQLAlchemy ORM + Session| UsersTbl
+    Router -->|SQLAlchemy ORM + Session| TicketsTbl
+</div>
+
+<hr />
+<h2>2. Core Components</h2>
+<ol>
+<li><strong>Flutter Web Dashboard (Client Tier)</strong>:<br />
+   - Support agent view: Live queue filtered by priority and category, auto-triage confirmation badge, similar tickets pane, and one-click RAG fix insertion.<br />
+   - User view: Ticket submission form with instant feedback.</li>
+<li><strong>FastAPI Application (Application Tier)</strong>:<br />
+   - Security: OAuth2 Password Bearer with JWT tokens (<code>user</code>, <code>agent</code>, <code>admin</code> roles).<br />
+   - Ticket Manager: Standard CRUD for tickets, statuses, assignments, and audit logs.<br />
+   - Inference Engine: Loads pre-trained <code>all-MiniLM-L6-v2</code> encoder (via <code>sentence-transformers</code>) and serialized Scikit-learn Logistic Regression models (<code>category_model.joblib</code>, <code>priority_model.joblib</code>).<br />
+   - RAG Chain Manager: LangChain orchestrator that binds retrieved context into an explainable prompt template and invokes Gemini 1.5 Flash with structured Pydantic output.</li>
+<li><strong>Supabase PostgreSQL with <code>pgvector</code> (Data Tier)</strong>:<br />
+   - Relational tables for Users and Tickets.<br />
+   - Dense vector column <code>embedding vector(384)</code> storing ticket textual representations.<br />
+   - HNSW index on <code>embedding</code> using <code>vector_cosine_ops</code> for fast approximate nearest neighbor (ANN) cosine distance queries.</li>
+<li><strong>Google Gemini 1.5 Flash (LLM Provider)</strong>:<br />
+   - Free-tier hosted LLM accessed via <code>langchain-google-genai</code>.<br />
+   - Constrained via structured JSON output parser to return strictly <code>{suggested_fix, sources, confidence_note}</code> without hallucinations.</li>
+</ol>
+<hr />
+<h2>3. Data Flows</h2>
+<h3>Flow 1: Ticket Ingestion &amp; Auto-Triage (<code>POST /api/v1/tickets</code>)</h3>
+<ol>
+<li>User or agent submits <code>{title, description}</code>.</li>
+<li>Embedding Service computes dense vector: (\mathbf{v} \in \mathbb{R}^{384}).</li>
+<li>Triage Classifier feeds (\mathbf{v}) into Logistic Regression models to predict:<br />
+   - <code>category</code> (e.g., <em>Hardware, Software, Network, Access</em>)<br />
+   - <code>priority</code> (e.g., <em>Low, Medium, High, Critical</em>)</li>
+<li>Ticket record is inserted into <code>tickets</code> table with <code>status = 'Open'</code>, predicted labels, and <code>embedding = v</code>.</li>
+<li>Created ticket is returned with HTTP 201.</li>
+</ol>
+<div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as Client / User
+    participant API as FastAPI Router
+    participant ML as ML Triage Service
+    participant DB as PostgreSQL (pgvector)
+
+    User->>API: POST /api/v1/tickets (title, description)
+    API->>ML: Predict category & priority (all-MiniLM-L6-v2 + LogReg)
+    ML-->>API: Predicted labels & probability distributions
+    API->>ML: Compute vector embedding (384-dim)
+    ML-->>API: Dense vector embedding
+    API->>DB: INSERT into tickets (title, desc, category, priority, embedding, status='Open')
+    DB-->>API: Inserted Ticket Record
+    API-->>User: HTTP 201 Created (Ticket Details + Predicted Triage)
+</div>
+
+<h3>Flow 2: Similar / Duplicate Ticket Search (<code>POST /api/v1/tickets/similar</code>)</h3>
+<ol>
+<li>Agent inputs text query or references an active ticket ID.</li>
+<li>Text is converted to embedding (\mathbf{q} \in \mathbb{R}^{384}).</li>
+<li>Query executes cosine distance lookup in PostgreSQL:<br />
+<code>sql
+   SELECT id, title, description, status, resolution_notes,
+          1 - (embedding &lt;=&gt; :q) AS similarity_score
+   FROM tickets
+   WHERE id != :exclude_id
+   ORDER BY embedding &lt;=&gt; :q ASC
+   LIMIT :limit;</code></li>
+<li>Returns top-K similar historical tickets with similarity scores (\in [0, 1]).</li>
+</ol>
+<h3>Flow 3: RAG Resolution Assistant (<code>POST /api/v1/tickets/{id}/suggest</code>)</h3>
+<ol>
+<li>Agent requests AI resolution assistance for ticket ID (t).</li>
+<li>System fetches ticket (t) and retrieves top-3 historically <strong>Resolved</strong> tickets with cosine similarity score (\ge 0.65).</li>
+<li>If no resolved tickets meet the threshold, chain halts early and returns a fallback message: <em>"No sufficiently similar resolved tickets found. Please escalate to a Senior Specialist."</em></li>
+<li>If similar resolved tickets exist, format context into a strict prompt template:<br />
+   - Grounding rule: Use <em>only</em> historical resolutions. Do not invent steps.</li>
+<li>Invoke Gemini 1.5 Flash with structured output schema:<br />
+<code>json
+   {
+     "suggested_fix": "Step-by-step resolution steps...",
+     "sources": [102, 189],
+     "confidence_note": "Based on 2 historical tickets with &gt;80% similarity."
+   }</code></li>
+<li>Return structured JSON payload to the agent dashboard.</li>
+</ol>
+<hr />
+<h2>4. Database Schema (PostgreSQL + pgvector)</h2>
+<div class="mermaid">
+erDiagram
+    USERS {
+        uuid id PK
+        varchar email UK
+        varchar hashed_password
+        varchar full_name
+        varchar role "user | agent | admin"
+        timestamp created_at
+    }
+
+    TICKETS {
+        uuid id PK
+        varchar title
+        text description
+        varchar category "Hardware | Software | Network | Access"
+        varchar priority "Low | Medium | High | Critical"
+        varchar status "Open | In_Progress | Resolved | Closed"
+        uuid created_by_id FK
+        uuid assigned_to_id FK
+        text resolution_notes
+        vector_384 embedding
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USERS ||--o{ TICKETS : "creates"
+    USERS ||--o{ TICKETS : "assigned to"
+</div>
+
+<h3>SQL DDL Definition</h3>
+<pre><code class="language-sql">-- Enable pgvector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Users table
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    hashed_password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'agent', 'admin')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Tickets table
+CREATE TABLE tickets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(50) NOT NULL CHECK (category IN ('Hardware', 'Software', 'Network', 'Access')),
+    priority VARCHAR(50) NOT NULL CHECK (priority IN ('Low', 'Medium', 'High', 'Critical')),
+    status VARCHAR(50) NOT NULL DEFAULT 'Open' CHECK (status IN ('Open', 'In_Progress', 'Resolved', 'Closed')),
+    created_by_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    assigned_to_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    resolution_notes TEXT,
+    embedding VECTOR(384),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Standard relational indexes
+CREATE INDEX idx_tickets_status ON tickets(status);
+CREATE INDEX idx_tickets_category ON tickets(category);
+CREATE INDEX idx_tickets_priority ON tickets(priority);
+CREATE INDEX idx_tickets_created_by ON tickets(created_by_id);
+CREATE INDEX idx_tickets_assigned_to ON tickets(assigned_to_id);
+
+-- HNSW Vector Index for Cosine Distance (&lt;=&gt;)
+-- m=16 (connections per element), ef_construction=64 (build trade-off)
+CREATE INDEX idx_tickets_embedding_hnsw 
+ON tickets USING hnsw (embedding vector_cosine_ops)
+WITH (m = 16, ef_construction = 64);
+</code></pre>
+<hr />
+<h2>5. API Contracts &amp; Specifications</h2>
+<p>All authenticated endpoints require an <code>Authorization: Bearer &lt;JWT&gt;</code> header.</p>
+<h3>5.1 Authentication Endpoints</h3>
+<ul>
+<li><code>POST /api/v1/auth/register</code>: Create a new user account.</li>
+<li><code>POST /api/v1/auth/login</code>: Exchange <code>username</code> &amp; <code>password</code> for <code>{access_token, token_type}</code>.</li>
+<li><code>GET /api/v1/auth/me</code>: Retrieve current user profile and role.</li>
+</ul>
+<h3>5.2 Ticket Management Endpoints</h3>
+<ul>
+<li><code>POST /api/v1/tickets</code>:</li>
+<li>Request: <code>{ "title": "Cannot connect to VPN", "description": "GlobalProtect gives error 502." }</code></li>
+<li>Response (201): Ticket object including auto-predicted <code>category</code>, <code>priority</code>, and <code>status: "Open"</code>.</li>
+<li><code>GET /api/v1/tickets</code>: List tickets with query params (<code>status</code>, <code>category</code>, <code>priority</code>, <code>limit</code>, <code>offset</code>).</li>
+<li><code>GET /api/v1/tickets/{id}</code>: Detailed ticket view.</li>
+<li><code>PATCH /api/v1/tickets/{id}</code>: Update status, assignment, or resolution notes.</li>
+</ul>
+<h3>5.3 Machine Learning &amp; RAG Endpoints</h3>
+<h4><code>POST /api/v1/ml/predict</code></h4>
+<p>Predicts category and priority without persisting a ticket.</p>
+<pre><code class="language-json">// Request Body
+{
+  &quot;title&quot;: &quot;Broken monitor HDMI port&quot;,
+  &quot;description&quot;: &quot;Screen flickers and turns black when connected via HDMI adapter.&quot;
+}
+
+// Response Body (200 OK)
+{
+  &quot;category&quot;: &quot;Hardware&quot;,
+  &quot;category_confidence&quot;: 0.89,
+  &quot;category_probabilities&quot;: {
+    &quot;Hardware&quot;: 0.89,
+    &quot;Software&quot;: 0.05,
+    &quot;Network&quot;: 0.04,
+    &quot;Access&quot;: 0.02
+  },
+  &quot;priority&quot;: &quot;High&quot;,
+  &quot;priority_confidence&quot;: 0.76,
+  &quot;priority_probabilities&quot;: {
+    &quot;Low&quot;: 0.04,
+    &quot;Medium&quot;: 0.20,
+    &quot;High&quot;: 0.76,
+    &quot;Critical&quot;: 0.00
+  }
+}
+</code></pre>
+<h4><code>POST /api/v1/ml/similar</code></h4>
+<p>Searches historical tickets using cosine similarity over embeddings.</p>
+<pre><code class="language-json">// Request Body
+{
+  &quot;text&quot;: &quot;Outlook keeps crashing on launch after Windows update&quot;,
+  &quot;limit&quot;: 3,
+  &quot;status_filter&quot;: &quot;Resolved&quot;
+}
+
+// Response Body (200 OK)
+{
+  &quot;query&quot;: &quot;Outlook keeps crashing on launch after Windows update&quot;,
+  &quot;results&quot;: [
+    {
+      &quot;id&quot;: &quot;c1f7b889-4a90-48e2-bca4-d4b889412e21&quot;,
+      &quot;title&quot;: &quot;Outlook crash on start-up&quot;,
+      &quot;description&quot;: &quot;Office 365 Outlook terminates unexpectedly during profile load.&quot;,
+      &quot;category&quot;: &quot;Software&quot;,
+      &quot;status&quot;: &quot;Resolved&quot;,
+      &quot;resolution_notes&quot;: &quot;Repaired Office installation via Add/Remove programs and re-synced profile.&quot;,
+      &quot;similarity_score&quot;: 0.912
+    }
+  ]
+}
+</code></pre>
+<h4><code>POST /api/v1/ml/suggest</code></h4>
+<p>Generates a grounded resolution recommendation using top-3 historical resolved tickets and Gemini 1.5 Flash.</p>
+<pre><code class="language-json">// Request Body
+{
+  &quot;ticket_id&quot;: &quot;c1f7b889-4a90-48e2-bca4-d4b889412e21&quot;
+}
+
+// Response Body (200 OK)
+{
+  &quot;ticket_id&quot;: &quot;c1f7b889-4a90-48e2-bca4-d4b889412e21&quot;,
+  &quot;suggested_fix&quot;: &quot;1. Run Windows Quick Repair on Microsoft 365.\n2. If issue persists, launch Outlook in safe mode (outlook.exe /safe).\n3. Rebuild the OST mail profile.&quot;,
+  &quot;sources&quot;: [
+    {
+      &quot;ticket_id&quot;: &quot;893c5fa1-...&quot;,
+      &quot;title&quot;: &quot;Outlook crash on start-up&quot;,
+      &quot;similarity_score&quot;: 0.912
+    },
+    {
+      &quot;ticket_id&quot;: &quot;147da33e-...&quot;,
+      &quot;title&quot;: &quot;Office app error after KB update&quot;,
+      &quot;similarity_score&quot;: 0.845
+    }
+  ],
+  &quot;confidence_note&quot;: &quot;Grounded in 2 historical resolved tickets with &gt;80% semantic match.&quot;
+}
+</code></pre>
+<hr />
+<h2>6. Project Directory Layout</h2>
+<pre><code class="language-text">TicketIQ/
+├── .env.example
+├── README.md
+├── requirements.txt
+├── Dockerfile
+├── docs/
+│   ├── architecture.md
+│   ├── phases.md
+│   ├── workflow.md
+│   ├── learning_map.md
+│   ├── risks.md
+│   └── resume_bullets.md
+├── data/
+│   ├── raw/
+│   │   └── customer_support_tickets.csv
+│   ├── processed/
+│   │   ├── train.csv
+│   │   ├── test.csv
+│   │   └── eval_100_heldout.csv
+│   └── models/
+│       ├── tfidf_vectorizer.joblib
+│       ├── baseline_category_lr.joblib
+│       ├── baseline_priority_lr.joblib
+│       ├── embedding_category_lr.joblib
+│       ├── embedding_priority_lr.joblib
+│       └── label_encoders.joblib
+├── notebooks/
+│   ├── 01_eda_and_cleaning.ipynb
+│   ├── 02_baseline_tfidf_logistic_regression.ipynb
+│   ├── 03_embeddings_logistic_regression.ipynb
+│   └── 04_pgvector_retrieval_and_eval.ipynb
+├── backend/
+│   ├── alembic/
+│   │   ├── env.py
+│   │   └── versions/
+│   ├── alembic.ini
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   └── security.py
+│   │   ├── db/
+│   │   │   ├── base.py
+│   │   │   └── session.py
+│   │   ├── models/
+│   │   │   ├── user.py
+│   │   │   └── ticket.py
+│   │   ├── schemas/
+│   │   │   ├── user.py
+│   │   │   ├── ticket.py
+│   │   │   └── ml.py
+│   │   ├── services/
+│   │   │   ├── auth_service.py
+│   │   │   ├── ticket_service.py
+│   │   │   └── ml/
+│   │   │       ├── encoder.py         # all-MiniLM-L6-v2 wrapper
+│   │   │       ├── classifier.py      # Logistic Regression predictor
+│   │   │       ├── retriever.py       # pgvector cosine similarity
+│   │   │       └── rag_chain.py       # LangChain + Gemini structured chain
+│   │   └── api/
+│   │       ├── deps.py
+│   │       └── v1/
+│   │           ├── router.py
+│   │           ├── endpoints/
+│   │           │   ├── auth.py
+│   │           │   ├── tickets.py
+│   │           │   └── ml.py
+│   └── tests/
+│       ├── conftest.py
+│       ├── test_auth.py
+│       ├── test_tickets.py
+│       ├── test_classifier.py
+│       └── test_rag_chain.py
+└── frontend/
+    └── ticketiq_dashboard/           # Flutter Web application (Phase 4)
+        ├── pubspec.yaml
+        └── lib/
+            ├── main.dart
+            ├── models/
+            ├── providers/
+            ├── services/
+            └── screens/
+</code></pre>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day-by-Day Workflow & Playbook — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  <h1>TicketIQ — Day-by-Day Workflow &amp; Engineering Playbook</h1>
+<p>This document defines the 28-day execution plan (2–3 hours/day), Git branching conventions, metric logging protocol, and Definition-of-Done (DoD) checklists for every phase.</p>
+<hr />
+<h2>1. Day-by-Day Plan (28 Days)</h2>
+<h3>Week 1: Phase 1 — Standalone Classifier &amp; Experimentation Notebook</h3>
+<p><em>Goal: Build an explainable text classification pipeline predicting Category and Priority.</em></p>
+<ul>
+<li><strong>Day 1: Environment Setup &amp; EDA</strong></li>
+<li>Initialize Git repo, create virtual environment (<code>venv</code>), install dependencies (<code>scikit-learn</code>, <code>pandas</code>, <code>numpy</code>, <code>matplotlib</code>, <code>seaborn</code>, <code>jupyter</code>).</li>
+<li>Download dataset from Kaggle to <code>data/raw/</code>.</li>
+<li>Open <code>notebooks/01_eda_and_cleaning.ipynb</code>: analyze class distributions, missing values, text length histograms.</li>
+<li><strong>Day 2: Data Preprocessing &amp; Stratified Splitting</strong></li>
+<li>Implement text cleaning functions (lowercase, regex strip URLs/HTML, whitespace normalization).</li>
+<li>Create stratified 80/20 train/test split to preserve class ratios.</li>
+<li>Carve out 100 historical resolved tickets into <code>data/processed/eval_100_heldout.csv</code> for Phase 2 retrieval testing.</li>
+<li>Save <code>data/processed/train.csv</code> and <code>data/processed/test.csv</code>.</li>
+<li><strong>Day 3: Baseline Classifier (TF-IDF + Logistic Regression)</strong></li>
+<li>Open <code>notebooks/02_baseline_tfidf_logistic_regression.ipynb</code>.</li>
+<li>Fit <code>TfidfVectorizer(max_features=5000, ngram_range=(1,2))</code> on training text.</li>
+<li>Train baseline <code>LogisticRegression(class_weight='balanced')</code> for <strong>Category</strong>.</li>
+<li>Train baseline <code>LogisticRegression(class_weight='balanced')</code> for <strong>Priority</strong>.</li>
+<li>Compute classification report (precision, recall, macro-F1) and plot confusion matrix.</li>
+<li><strong>Day 4: Dense Sentence Embeddings (<code>all-MiniLM-L6-v2</code>)</strong></li>
+<li>Open <code>notebooks/03_embeddings_logistic_regression.ipynb</code>.</li>
+<li>Install <code>sentence-transformers</code> and encode train/test text into 384-dimensional dense vectors.</li>
+<li>Train <code>LogisticRegression</code> on embeddings for Category and Priority.</li>
+<li>Log macro-F1 and compare head-to-head against TF-IDF baseline.</li>
+<li><strong>Day 5: Error Analysis &amp; Hyperparameter Tuning</strong></li>
+<li>Inspect confusion matrices: where does the classifier fail? (e.g. "Access" vs "Software", "Medium" vs "High").</li>
+<li>Tune regularization parameter (C \in [0.1, 1.0, 10.0]) using stratified validation.</li>
+<li>Validate that inference latency on a single text string is (&lt; 25\text{ ms}).</li>
+<li><strong>Day 6: Serialization &amp; Phase 1 Sign-Off</strong></li>
+<li>Export trained models to <code>data/models/</code>:<ul>
+<li><code>embedding_category_lr.joblib</code></li>
+<li><code>embedding_priority_lr.joblib</code></li>
+<li><code>label_encoders.joblib</code></li>
+</ul>
+</li>
+<li>Write a standalone test script <code>scripts/verify_models.py</code> verifying that models load and predict correctly.</li>
+<li>Complete Phase 1 Definition-of-Done checklist.</li>
+</ul>
+<hr />
+<h3>Week 2: Phase 2 — Vector Retrieval &amp; pgvector Setup</h3>
+<p><em>Goal: Index ticket embeddings in Supabase PostgreSQL and evaluate duplicate/similar retrieval.</em></p>
+<ul>
+<li><strong>Day 7: Supabase PostgreSQL &amp; pgvector Setup</strong></li>
+<li>Create free-tier Supabase project.</li>
+<li>Enable <code>vector</code> extension in PostgreSQL.</li>
+<li>Create <code>users</code> and <code>tickets</code> tables via SQL editor.</li>
+<li>Create HNSW index on <code>tickets(embedding)</code> using <code>vector_cosine_ops</code>.</li>
+<li><strong>Day 8: Batch Ingestion Script</strong></li>
+<li>Write <code>scripts/ingest_historical_tickets.py</code> using <code>SQLAlchemy</code> and <code>pgvector.sqlalchemy</code>.</li>
+<li>Encode (\ge 1,000) historical tickets from <code>train.csv</code> and insert them into Supabase.</li>
+<li>Verify row count, column constraints, and vector dimensions (384).</li>
+<li><strong>Day 9: SQL Similarity Search Testing</strong></li>
+<li>Open <code>notebooks/04_pgvector_retrieval_and_eval.ipynb</code>.</li>
+<li>Implement raw SQL and SQLAlchemy queries computing cosine similarity:<br />
+    [<br />
+    \text{similarity} = 1 - (\text{embedding} \Leftrightarrow \text{query_vector})<br />
+    ]</li>
+<li>Test queries with varying filters (<code>status = 'Resolved'</code>) and similarity thresholds ((\ge 0.65)).</li>
+<li><strong>Day 10: Benchmark Suite Setup</strong></li>
+<li>Load the 100 held-out evaluation tickets (<code>eval_100_heldout.csv</code>).</li>
+<li>Formulate automated queries using the ticket description as search input.</li>
+<li><strong>Day 11: Retrieval Evaluation (Hit@3 Calculation)</strong></li>
+<li>Execute top-3 retrieval for all 100 evaluation tickets.</li>
+<li>Calculate <strong>Hit@3</strong>: query is a "hit" if at least one of the top-3 results shares the ground-truth category and addresses a related issue.</li>
+<li>Record average vector query latency across the 100 queries.</li>
+<li><strong>Day 12: Index Tuning &amp; Phase 2 Sign-Off</strong></li>
+<li>Verify HNSW query performance with <code>EXPLAIN ANALYZE</code>.</li>
+<li>Ensure query execution time remains (&lt; 100\text{ ms}).</li>
+<li>Complete Phase 2 Definition-of-Done checklist.</li>
+</ul>
+<hr />
+<h3>Week 3: Phase 3 — RAG Resolution Chain &amp; Core FastAPI Service (MVP)</h3>
+<p><em>Goal: Assemble LangChain RAG pipeline and complete the production-ready FastAPI service.</em></p>
+<ul>
+<li><strong>Day 13: LangChain Gemini Integration</strong></li>
+<li>Obtain Google AI Studio API key for Gemini 1.5 Flash.</li>
+<li>Install <code>langchain</code> and <code>langchain-google-genai</code>.</li>
+<li>Define Pydantic output schema <code>ResolutionResponse(suggested_fix, sources, confidence_note)</code>.</li>
+<li>Test LLM generation using <code>with_structured_output(ResolutionResponse)</code>.</li>
+<li><strong>Day 14: RAG Chain Assembly</strong></li>
+<li>Build <code>app/services/ml/rag_chain.py</code>:<ul>
+<li>Retrieve top-3 historical resolved tickets from Supabase.</li>
+<li>Format prompt: strictly instruct LLM to synthesize only from retrieved resolutions.</li>
+<li>If top similarity (&lt; 0.65), return fallback response without calling Gemini.</li>
+</ul>
+</li>
+<li>Verify zero hallucination on out-of-domain queries.</li>
+<li><strong>Day 15: FastAPI Foundation &amp; Auth Engine</strong></li>
+<li>Scaffold <code>backend/app/</code> structure (<code>core</code>, <code>db</code>, <code>models</code>, <code>schemas</code>, <code>api</code>).</li>
+<li>Configure SQLAlchemy async/sync session and Alembic migrations.</li>
+<li>Implement JWT authentication with password hashing (<code>passlib</code>/<code>bcrypt</code>) and role-based dependency (<code>get_current_active_user</code>, <code>require_role</code>).</li>
+<li><strong>Day 16: Ticket Management CRUD Endpoints</strong></li>
+<li>Implement <code>POST /api/v1/tickets</code>: auto-predicts Category &amp; Priority via Phase 1 models, generates embedding, stores ticket.</li>
+<li>Implement <code>GET /api/v1/tickets</code>, <code>GET /api/v1/tickets/{id}</code>, <code>PATCH /api/v1/tickets/{id}</code>.</li>
+<li><strong>Day 17: ML Endpoints Implementation</strong></li>
+<li>Implement <code>POST /api/v1/ml/predict</code>: standalone category/priority prediction with class probabilities.</li>
+<li>Implement <code>POST /api/v1/ml/similar</code>: top-K semantic search.</li>
+<li>Implement <code>POST /api/v1/ml/suggest</code>: full RAG resolution chain.</li>
+<li><strong>Day 18: Automated Pytest Suite &amp; MVP Sign-Off</strong></li>
+<li>Write test suite in <code>backend/tests/</code>:<ul>
+<li><code>test_auth.py</code>: login, token validation, RBAC restrictions.</li>
+<li><code>test_tickets.py</code>: CRUD operations and auto-triage insertion.</li>
+<li><code>test_classifier.py</code>: prediction outputs and schema validation.</li>
+<li><code>test_rag_chain.py</code>: RAG logic with mocked Gemini client.</li>
+</ul>
+</li>
+<li>Verify 100% test pass rate with <code>pytest -v</code>.</li>
+<li><strong>Complete Phase 3 Definition-of-Done (End-of-MVP).</strong></li>
+</ul>
+<hr />
+<h3>Week 4: Phase 4 &amp; Phase 5 — Flutter Dashboard &amp; Cloud Deployment</h3>
+<ul>
+<li><strong>Day 19: Flutter Web Setup &amp; Auth Flow</strong></li>
+<li>Initialize Flutter project: <code>flutter create --platforms=web ticketiq_dashboard</code>.</li>
+<li>Implement API client using <code>http</code> package with JWT storage.</li>
+<li>Build Login &amp; Registration screen.</li>
+<li><strong>Day 20: Ticket Queue Dashboard</strong></li>
+<li>Build main queue UI: list view displaying ticket cards.</li>
+<li>Add filter chips for Category, Priority, and Status.</li>
+<li>Display color-coded badges for priority (<em>Critical: red, High: orange, Medium: blue, Low: grey</em>).</li>
+<li><strong>Day 21: Ticket Detail &amp; Triage Inspector</strong></li>
+<li>Build detailed view showing requester info, description, and status.</li>
+<li>Show "AI Predicted Triage" badge with confidence score.</li>
+<li>Add "Similar Tickets" collapsible drawer showing top-3 matches.</li>
+<li><strong>Day 22: AI Resolution Assistant Widget</strong></li>
+<li>Build "AI Resolution Assistant" card on the ticket detail screen.</li>
+<li>Add "Generate Fix" button calling <code>POST /api/v1/ml/suggest</code>.</li>
+<li>Render structured Markdown resolution steps and cited source ticket IDs.</li>
+<li>Add "Apply to Resolution Notes" button that copies the fix and updates status to "Resolved".</li>
+<li><strong>Day 23: Frontend Polish &amp; Phase 4 Sign-Off</strong></li>
+<li>Handle loading spinners, error banners, and network timeouts.</li>
+<li>Test production web build: <code>flutter build web --release</code>.</li>
+<li>Complete Phase 4 Definition-of-Done checklist.</li>
+<li><strong>Day 24: Docker Containerization</strong></li>
+<li>Write multi-stage <code>Dockerfile</code> for FastAPI backend.</li>
+<li>Pre-download <code>all-MiniLM-L6-v2</code> during container build to ensure instant container startup.</li>
+<li>Verify local container execution with <code>docker run</code>.</li>
+<li><strong>Day 25: Render &amp; Supabase Cloud Configuration</strong></li>
+<li>Connect GitHub repository to Render.</li>
+<li>Create Render Web Service for FastAPI.</li>
+<li>Configure Supabase Connection Pooler (Transaction Mode, port 6543) in <code>DATABASE_URL</code>.</li>
+<li>Set production environment variables on Render.</li>
+<li><strong>Day 26: Frontend Hosting &amp; CORS Integration</strong></li>
+<li>Deploy Flutter Web build (Render Static Site, Vercel, or GitHub Pages).</li>
+<li>Configure CORS origins in FastAPI to allow frontend domain.</li>
+<li>Verify live API communication between frontend and backend.</li>
+<li><strong>Day 27: Production Latency &amp; Smoke Testing</strong></li>
+<li>Execute end-to-end user workflow on the live production URL.</li>
+<li>Measure live endpoint latencies:<ul>
+<li><code>/predict</code>: (&lt; 50\text{ ms})</li>
+<li><code>/similar</code>: (&lt; 120\text{ ms})</li>
+<li><code>/suggest</code>: (&lt; 2.5\text{ s})</li>
+</ul>
+</li>
+<li><strong>Day 28: Final Polish, Documentation &amp; Project Wrap-Up</strong></li>
+<li>Record 2-minute demo video/GIF for project showcase.</li>
+<li>Polish README with architecture diagram, API documentation, and live links.</li>
+<li>Complete Phase 5 Definition-of-Done checklist.</li>
+</ul>
+<hr />
+<h2>2. Git Branching Strategy</h2>
+<p>To maintain a clean, professional commit history for placement portfolios:</p>
+<h3>Branch Structure</h3>
+<ul>
+<li><code>main</code>: Production-ready code only. Deploys directly to Render.</li>
+<li><code>dev</code>: Integration branch where all completed features merge.</li>
+<li><code>feature/*</code>: Short-lived branches dedicated to individual phase components.</li>
+</ul>
+<h3>Feature Branch Roadmap</h3>
+<pre><code class="language-text">main
+ └── dev
+      ├── feature/phase1-triage-classifier
+      ├── feature/phase2-pgvector-retrieval
+      ├── feature/phase3-rag-fastapi-backend
+      ├── feature/phase4-flutter-web-dashboard
+      └── feature/phase5-deployment-hardening
+</code></pre>
+<h3>Commit Message Conventions</h3>
+<p>Use the <strong>Conventional Commits</strong> standard:<br />
+- <code>feat(ml)</code>: New machine learning feature or model training script<br />
+- <code>feat(api)</code>: New FastAPI endpoint or service logic<br />
+- <code>feat(ui)</code>: New Flutter screen or component<br />
+- <code>fix(retrieval)</code>: Bugfix in vector query or database logic<br />
+- <code>test(api)</code>: Adding or updating Pytest test cases<br />
+- <code>docs</code>: Documentation updates or architecture notes<br />
+- <code>chore</code>: Dependency updates, Docker configuration, or CI changes</p>
+<p><em>Example</em>: <code>feat(ml): train sentence-embeddings logistic regression for category classification</code></p>
+<hr />
+<h2>3. Experiment &amp; Metric Logging Protocol</h2>
+<p>Every ML and retrieval experiment must be recorded in <code>data/experiments_log.csv</code> and summarized in <code>docs/experiments_summary.md</code>.</p>
+<h3>Experiment Log Schema (<code>data/experiments_log.csv</code>)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Column Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>exp_id</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">e.g. <code>EXP-01-TFIDF</code>, <code>EXP-02-MINILM</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>date</code></td>
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">YYYY-MM-DD</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>target</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>category</code> or <code>priority</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>representation</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>TF-IDF (5000 feats)</code> or <code>all-MiniLM-L6-v2 (384-dim)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;"><code>LogisticRegression</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hyperparameters</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">e.g. <code>C=1.0, class_weight=balanced, solver=lbfgs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>macro_f1</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Unweighted mean of per-class F1 scores</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>precision</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Macro-averaged precision</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>recall</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Macro-averaged recall</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>inference_ms</code></td>
+<td style="text-align: left;">Float</td>
+<td style="text-align: left;">Average latency per sample in milliseconds</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>notes</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">Key qualitative observations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. Definition-of-Done (DoD) Checklists</h2>
+<h3>Phase 1 DoD Checklist</h3>
+<ul>
+<li>[ ] Raw dataset cleaned and split into 80/20 train/test split.</li>
+<li>[ ] 100-ticket held-out evaluation set saved to <code>eval_100_heldout.csv</code>.</li>
+<li>[ ] TF-IDF baseline and dense embedding models trained and logged in <code>experiments_log.csv</code>.</li>
+<li>[ ] Category classifier achieves (\ge 0.75) Macro-F1.</li>
+<li>[ ] Priority classifier achieves (\ge 0.65) Macro-F1.</li>
+<li>[ ] Model artifacts exported to <code>data/models/</code> and verified with a standalone Python loading script.</li>
+</ul>
+<h3>Phase 2 DoD Checklist</h3>
+<ul>
+<li>[ ] Supabase PostgreSQL instance has <code>vector</code> extension and HNSW index active.</li>
+<li>[ ] Batch ingestion script successfully indexes (\ge 1,000) historical tickets.</li>
+<li>[ ] Cosine similarity retrieval query runs in (&lt; 100\text{ ms}).</li>
+<li>[ ] Hit@3 evaluation on the 100-ticket held-out set achieves (\ge 80\%).</li>
+</ul>
+<h3>Phase 3 DoD Checklist (End of MVP)</h3>
+<ul>
+<li>[ ] LangChain RAG pipeline integrates with Gemini 1.5 Flash using structured Pydantic output.</li>
+<li>[ ] Out-of-distribution queries with similarity (&lt; 0.65) trigger fallback without calling LLM.</li>
+<li>[ ] FastAPI backend implements JWT auth, RBAC (<code>user</code>, <code>agent</code>, <code>admin</code>), CRUD, and <code>/ml</code> endpoints.</li>
+<li>[ ] All Pytest unit and integration tests pass with 100% success rate.</li>
+<li>[ ] Swagger documentation at <code>/docs</code> tested and verified manually.</li>
+</ul>
+<h3>Phase 4 DoD Checklist</h3>
+<ul>
+<li>[ ] Flutter Web app runs locally and connects to FastAPI backend.</li>
+<li>[ ] Support agent can log in and view ticket queue with category/priority/status filters.</li>
+<li>[ ] Ticket detail screen displays auto-triage badges, similar tickets, and AI resolution generator.</li>
+<li>[ ] Agent can apply the AI suggestion to resolution notes with a single click.</li>
+</ul>
+<h3>Phase 5 DoD Checklist</h3>
+<ul>
+<li>[ ] Multi-stage Dockerfile builds and runs locally without runtime model downloads.</li>
+<li>[ ] Backend deployed on Render Web Service, database hosted on Supabase with connection pooling.</li>
+<li>[ ] Flutter Web dashboard deployed and communicating with backend with zero CORS errors.</li>
+<li>[ ] Live response latencies verified: <code>/predict</code> (&lt; 50\text{ ms}), <code>/similar</code> (&lt; 120\text{ ms}), <code>/suggest</code> (&lt; 2.5\text{ s}).</li>
+<li>[ ] Final README complete with architecture diagrams, setup instructions, and demo GIF.</li>
+</ul>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syllabus & Learning Map — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  <h1>TicketIQ — Syllabus &amp; Learning Map</h1>
+<p>This learning map outlines exactly which concepts from your syllabus apply to each phase of the project.</p>
+<ul>
+<li><strong>Category A (Already known)</strong>: Topics from your ML notes to revise and defend mathematically.</li>
+<li><strong>Category B (CampusX LangChain)</strong>: Topics from your Generative AI coursework to learn and apply.</li>
+<li><strong>Small Extras</strong>: Minimal, industry-standard tools outside A and B, each with a 1–2 line explanation and one short resource.</li>
+</ul>
+<blockquote>
+<p><strong>Zero Outside Scope Rule</strong>: No deep learning architectures (CNN/RNN/LSTM), no transformer training or fine-tuning, no LangGraph, no agents, no tool calling, and no Ollama.</p>
+</blockquote>
+<hr />
+<h2>Phase-by-Phase Syllabus Mapping</h2>
+<h3>Phase 1: Standalone Classifier &amp; Experimentation Notebook</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>Types of Data</strong>:</li>
+<li><em>Nominal categorical</em>: Ticket <code>Category</code> (<em>Hardware, Software, Network, Access</em>) — no natural ordering.</li>
+<li><em>Ordinal categorical</em>: Ticket <code>Priority</code> (<em>Low &lt; Medium &lt; High &lt; Critical</em>) — ordered priority levels.</li>
+<li><strong>Supervised Learning &amp; Logistic Regression</strong>:</li>
+<li>Multiclass classification using One-vs-Rest (OvR) and Multinomial Softmax loss.</li>
+<li>Decision boundaries in high-dimensional feature spaces.</li>
+<li><strong>Cost Function &amp; Gradient Descent</strong>:</li>
+<li>Log-loss / Cross-entropy cost function.</li>
+<li>Optimization via gradient descent; convergence and learning rate dynamics.</li>
+<li><strong>Overfitting &amp; Underfitting</strong>:</li>
+<li>L2 Regularization penalty ((C = \frac{1}{\lambda})) to control model variance and prevent overfitting on sparse text features.</li>
+<li><strong>Evaluation Metrics</strong>:</li>
+<li>Train/test split (80/20 stratified split to preserve class ratios).</li>
+<li>Accuracy vs Precision vs Recall vs F1-Score.</li>
+<li><strong>Macro-F1 Score</strong>: Unweighted arithmetic mean of F1 scores across classes (critical for diagnosing performance on minority classes).</li>
+<li><strong>Confusion Matrix</strong>: Identifying off-diagonal errors (e.g., mistaking <em>Critical</em> for <em>Medium</em>).</li>
+</ul>
+<h4>Concepts from Syllabus B to Learn</h4>
+<ul>
+<li><em>None required for Phase 1</em> (Pure classical ML phase).</li>
+</ul>
+<h4>Small Extras Needed in Phase 1</h4>
+<ol>
+<li><strong>TF-IDF (Term Frequency – Inverse Document Frequency)</strong>:<br />
+   - <em>Explanation</em>: A statistical representation that converts text strings into numerical vectors by weighing how frequently a term appears in a document against how common it is across the entire corpus.<br />
+   - <em>Resource</em>: <a href="https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting">Scikit-learn User Guide: TF-IDF Term Weighting</a> (5-minute read).</li>
+<li><strong>Pretrained Sentence Embeddings (<code>sentence-transformers: all-MiniLM-L6-v2</code>)</strong>:<br />
+   - <em>Explanation</em>: An off-the-shelf, frozen embedding model used strictly as a deterministic feature extractor to map raw text into a 384-dimensional dense vector space without training any neural network.<br />
+   - <em>Resource</em>: <a href="https://www.sbert.net/docs/quickstart.html">SBERT.net: Pretrained Models &amp; Quickstart</a>.</li>
+<li><strong>Model Serialization (<code>joblib</code>)</strong>:<br />
+   - <em>Explanation</em>: A standard Python library optimized for dumping and reloading fitted Scikit-Learn estimators and vectorizers to disk for production inference.<br />
+   - <em>Resource</em>: <a href="https://scikit-learn.org/stable/model_persistence.html">Scikit-learn Guide: Model Persistence</a>.</li>
+</ol>
+<hr />
+<h3>Phase 2: Vector Retrieval &amp; pgvector Setup</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>ML Basics &amp; Vector Spaces</strong>:</li>
+<li>Representing unstructured textual tickets as vectors (\mathbf{x} \in \mathbb{R}^{384}).</li>
+<li><strong>Cosine Similarity (Linear Algebra)</strong>:</li>
+<li>Mathematical definition:<br />
+    [<br />
+    \cos(\theta) = \frac{\mathbf{u} \cdot \mathbf{v}}{|\mathbf{u}|_2 |\mathbf{v}|_2}<br />
+    ]</li>
+<li>For (L_2)-normalized vectors, cosine similarity equals the dot product (\mathbf{u} \cdot \mathbf{v}), bounded in ([-1, 1]).</li>
+<li><strong>Evaluation Principles</strong>:</li>
+<li>Held-out test evaluation: using a dedicated 100-ticket benchmark set to objectively validate retrieval performance.</li>
+</ul>
+<h4>Concepts from Syllabus B to Learn</h4>
+<ul>
+<li><strong>Vector Stores and Retrievers</strong>:</li>
+<li>Concept of storing vector embeddings alongside metadata in an index.</li>
+<li>Querying the index using vector distance metrics to retrieve the top-K nearest neighbors.</li>
+</ul>
+<h4>Small Extras Needed in Phase 2</h4>
+<ol>
+<li><strong>PostgreSQL <code>pgvector</code> Extension</strong>:<br />
+   - <em>Explanation</em>: An open-source extension that adds a native <code>VECTOR</code> data type and exact/approximate nearest neighbor distance operators (such as <code>&lt;=&gt;</code> for cosine distance) directly inside PostgreSQL.<br />
+   - <em>Resource</em>: <a href="https://supabase.com/docs/guides/database/extensions/pgvector">Supabase pgvector Official Guide</a>.</li>
+<li><strong>Hit@K Evaluation Metric</strong>:<br />
+   - <em>Explanation</em>: An information retrieval metric that measures the proportion of test queries for which at least one relevant, ground-truth match appears within the top-K retrieved results.<br />
+   - <em>Resource</em>: <a href="https://developers.google.com/machine-learning/recommendation/dnn/retrieval">Google ML Guide: Retrieval Metrics (Hit Rate / Precision@K)</a>.</li>
+</ol>
+<hr />
+<h3>Phase 3: RAG Resolution Chain &amp; Core FastAPI Service (MVP)</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>Supervised Inference &amp; Probability Distributions</strong>:</li>
+<li>Extracting class probability distributions (<code>predict_proba</code>) from Logistic Regression models to feed confidence scores into API responses.</li>
+</ul>
+<h4>Concepts from Syllabus B to Learn</h4>
+<ul>
+<li><strong>LangChain Components and Models</strong>:</li>
+<li>Initializing and invoking a hosted LLM (<code>ChatGoogleGenerativeAI</code>).</li>
+<li><strong>Prompt Templates</strong>:</li>
+<li>Building parameterized prompts that dynamically inject retrieved historical resolutions as context into the instructions.</li>
+<li><strong>Structured Output and Output Parsers</strong>:</li>
+<li>Constraining LLM generation to return strictly formatted, typed JSON conforming to a Pydantic schema (<code>suggested_fix</code>, <code>sources</code>, <code>confidence_note</code>).</li>
+<li><strong>Chains (Retrieve (\to) Prompt (\to) LLM)</strong>:</li>
+<li>Composing the sequential pipeline: ticket input (\to) vector retrieval (\to) prompt formatting (\to) LLM execution (\to) JSON parsing.</li>
+<li><strong>RAG Concept</strong>:</li>
+<li>Retrieval-Augmented Generation: using external retrieved factual context to ground an LLM's response, mitigating hallucinations.</li>
+</ul>
+<h4>Small Extras Needed in Phase 3</h4>
+<ol>
+<li><strong>LangChain <code>with_structured_output</code> for Pydantic</strong>:<br />
+   - <em>Explanation</em>: A high-level LangChain method that binds a Pydantic class to an LLM call, guaranteeing a validated, strongly-typed Python dictionary/object response.<br />
+   - <em>Resource</em>: <a href="https://python.langchain.com/docs/how_to/structured_output/">LangChain Documentation: Structured Outputs</a>.</li>
+</ol>
+<hr />
+<h3>Phase 4: Flutter Web Agent Dashboard</h3>
+<h4>Concepts from Syllabus A &amp; B</h4>
+<ul>
+<li><em>No new ML or LangChain theory.</em> This phase focuses on front-end software engineering, state management, and API consumption.</li>
+</ul>
+<h4>Small Extras Needed in Phase 4</h4>
+<ol>
+<li><strong>JWT Auth &amp; HTTP Client in Flutter</strong>:<br />
+   - <em>Explanation</em>: Handling asynchronous HTTP requests in Dart using the <code>http</code> package and attaching the JWT <code>Authorization: Bearer &lt;token&gt;</code> header to protected requests.<br />
+   - <em>Resource</em>: <a href="https://docs.flutter.dev/cookbook/networking/fetch-data">Flutter Documentation: Fetch Data from the Internet</a>.</li>
+</ol>
+<hr />
+<h3>Phase 5: Testing, Hardening &amp; Cloud Deployment</h3>
+<h4>Concepts from Syllabus A to Revise</h4>
+<ul>
+<li><strong>Evaluation &amp; Verification</strong>:</li>
+<li>Re-running automated metric evaluations and test suites (<code>pytest</code>) to verify regression-free deployment.</li>
+<li><strong>Confusion Matrix in Production</strong>:</li>
+<li>Logging misclassified live samples for future continuous improvement.</li>
+</ul>
+<h4>Concepts from Syllabus B to Revise</h4>
+<ul>
+<li><strong>RAG Latency &amp; Guardrails</strong>:</li>
+<li>Measuring latency breakdown across vector search versus LLM generation.</li>
+<li>Enforcing similarity score thresholding ((\ge 0.65)) to abort LLM calls when historical context is weak.</li>
+</ul>
+<h4>Small Extras Needed in Phase 5</h4>
+<ol>
+<li><strong>Multi-Stage Dockerfile for ML Applications</strong>:<br />
+   - <em>Explanation</em>: Containerizing a Python application while caching HuggingFace embedding weights during image build time to prevent slow cold starts.<br />
+   - <em>Resource</em>: <a href="https://docs.docker.com/build/building/multi-stage/">Docker Guide: Multi-stage Builds</a>.</li>
+<li><strong>Supabase Connection Pooling (PgBouncer)</strong>:<br />
+   - <em>Explanation</em>: Connecting to PostgreSQL through a transaction-mode connection pooler (port 6543) to prevent backend containers from exhausting available database sockets.<br />
+   - <em>Resource</em>: <a href="https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler">Supabase Guide: Connection Management &amp; PgBouncer</a>.</li>
+</ol>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

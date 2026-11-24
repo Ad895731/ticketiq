@@ -1,0 +1,50 @@
+---
+description: Automatically updates the interview knowledge journal and recompiles docs/PDFs after major code updates or milestone completions in TicketIQ
+alwaysApply: true
+---
+
+# TicketIQ Automatic Interview Documentation & PDF Sync Rule
+
+This project is built by a student preparing for campus placements and technical interviews. Every engineering choice must be documented so the user can defend it during technical interviews.
+
+## Trigger Conditions
+Whenever the agent completes:
+- A new endpoint or service in FastAPI
+- An ML experiment, training script, or data preprocessing step
+- A database schema update, migration, or vector index operation
+- A LangChain prompt/chain modification or LLM integration
+- A major bug fix or architectural optimization
+- A phase completion milestone
+
+## Required Actions
+
+### 1. Update `docs/interview_knowledge_journal.md`
+Append a new entry under `## 4. Continuous Update Log (Phase-by-Phase)` using this exact structure:
+
+```markdown
+### [YYYY-MM-DD] — <Feature or Component Name>
+- **What Was Implemented**: <1-2 sentences on code written, endpoints created, or models trained>
+- **Engineering / Math Rationale**: <Why this choice was made mathematically or architecturally; loss functions, asymptotic complexity, or system constraints>
+- **Trade-Offs Considered**: <Alternative A vs Alternative B, and why A was chosen>
+- **Interview Question & Defense**:
+  - *Q*: "<What the interviewer will ask about this change>"
+  - *A*: "<The exact, crisp 30-second response demonstrating engineering maturity>"
+- **Metrics & Numbers**: <e.g., Latency, Macro-F1, RAM footprint, Test coverage percentage>
+```
+
+If the change impacts one of the core foundational decisions, update Section 1 and Section 2 of `docs/interview_knowledge_journal.md` as well.
+
+### 2. Automatically Rebuild HTML & PDFs
+Run the documentation compiler:
+```bash
+python3 scripts/build_docs_and_pdfs.py
+```
+This ensures that:
+- `docs/pdf/07_interview_knowledge_journal.pdf` is generated.
+- `docs/pdf/TicketIQ_Complete_Guide.pdf` is updated with the new interview knowledge.
+- The interactive Web Reader at `docs/index.html` reflects the live changes.
+
+### 3. Report to User
+At the end of the turn, explicitly notify the user:
+- What new interview question and defense was added to their `interview_knowledge_journal.md`.
+- That the PDF and interactive Web Reader have been re-compiled and are ready for review.

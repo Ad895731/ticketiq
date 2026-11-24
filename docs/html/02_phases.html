@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5-Phase Implementation Roadmap — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  <h1>TicketIQ — 5-Phase Implementation Plan</h1>
+<p>This roadmap organizes the development of TicketIQ into <strong>5 distinct phases</strong> designed for a 4-week timeline (2–3 hours/day).</p>
+<blockquote>
+<p><strong>Core MVP Milestone</strong>: <strong>Phases 1 through 3 form a complete, end-to-end functioning MVP.</strong> You will have a trained explainable classifier, a functional vector search system in PostgreSQL, and an authenticated FastAPI backend serving RAG resolutions before building the frontend or deploying to the cloud.</p>
+</blockquote>
+<hr />
+<h2>Phase Summary Table</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase</th>
+<th style="text-align: left;">Title</th>
+<th style="text-align: left;">Focus Area</th>
+<th style="text-align: left;">Estimated Duration</th>
+<th style="text-align: left;">Milestone Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Phase 1</strong></td>
+<td style="text-align: left;"><strong>Standalone Classifier &amp; Experiments</strong></td>
+<td style="text-align: left;">ML Modeling &amp; Evaluation</td>
+<td style="text-align: left;">Days 1 – 6 (6 days)</td>
+<td style="text-align: left;">Standalone Jupyter Notebooks + Model <code>.joblib</code> artifacts</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 2</strong></td>
+<td style="text-align: left;"><strong>Vector Retrieval &amp; pgvector Setup</strong></td>
+<td style="text-align: left;">DB Vectors &amp; Similarity Search</td>
+<td style="text-align: left;">Days 7 – 12 (6 days)</td>
+<td style="text-align: left;">Supabase pgvector schema + Hit@3 evaluation benchmark</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 3</strong></td>
+<td style="text-align: left;"><strong>RAG Chain &amp; FastAPI Backend (MVP)</strong></td>
+<td style="text-align: left;">LangChain &amp; API Engineering</td>
+<td style="text-align: left;">Days 13 – 18 (6 days)</td>
+<td style="text-align: left;">Fully functional, authenticated REST API with Pytest suite</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 4</strong></td>
+<td style="text-align: left;"><strong>Flutter Web Agent Dashboard</strong></td>
+<td style="text-align: left;">Frontend &amp; User Experience</td>
+<td style="text-align: left;">Days 19 – 23 (5 days)</td>
+<td style="text-align: left;">Interactive web UI for IT support agents</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 5</strong></td>
+<td style="text-align: left;"><strong>Testing, Hardening &amp; Cloud Deploy</strong></td>
+<td style="text-align: left;">Containerization &amp; Cloud Launch</td>
+<td style="text-align: left;">Days 24 – 28 (5 days)</td>
+<td style="text-align: left;">Live Render + Supabase deployment with verified latency</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Detailed Phase Breakdown</h2>
+<hr />
+<h3>Phase 1: Standalone ML Classifier &amp; Experimentation Notebook</h3>
+<p><em>Estimated Timeline: Days 1 – 6</em></p>
+<h4>Goal</h4>
+<p>Build, rigorously evaluate, and compare an explainable text classification pipeline predicting ticket <strong>Category</strong> (multiclass) and <strong>Priority</strong> (multiclass/ordinal) from textual descriptions using Scikit-Learn.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Data Acquisition &amp; EDA</strong>:<br />
+   - Download the IT/Customer Support Ticket dataset from Kaggle into <code>data/raw/</code>.<br />
+   - Perform exploratory data analysis: inspect distributions of ticket lengths, class frequencies for Category (<em>Hardware, Software, Network, Access</em>) and Priority (<em>Low, Medium, High, Critical</em>).<br />
+   - Clean text: lowercase conversion, whitespace normalization, removal of HTML tags/system artifacts.</li>
+<li><strong>Train/Test Splitting</strong>:<br />
+   - Create a clean 80/20 train/test split using <code>StratifiedShuffleSplit</code> to preserve class distributions across both Category and Priority.<br />
+   - Set aside a 100-ticket held-out set specifically for future retrieval benchmarking in Phase 2.</li>
+<li><strong>Baseline Model (TF-IDF + Logistic Regression)</strong>:<br />
+   - Fit <code>TfidfVectorizer</code> (max_features=5000, n-gram range=(1, 2), stop_words='english') on training text.<br />
+   - Train <code>LogisticRegression(max_iter=1000, class_weight='balanced')</code> for Category and Priority.<br />
+   - Evaluate with <code>classification_report</code> (precision, recall, macro-F1) and confusion matrices.</li>
+<li><strong>Embedding-Based Model (<code>all-MiniLM-L6-v2</code> + Logistic Regression)</strong>:<br />
+   - Generate 384-dimensional dense sentence embeddings using <code>sentence-transformers</code>.<br />
+   - Train <code>LogisticRegression</code> on the dense embeddings.<br />
+   - Compare performance against the TF-IDF baseline using Macro-F1.</li>
+<li><strong>Model Serialization</strong>:<br />
+   - Save the fitted vectorizer/embedder config and trained Logistic Regression estimators using <code>joblib</code> into <code>data/models/</code>.</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li><code>notebooks/01_eda_and_cleaning.ipynb</code></li>
+<li><code>notebooks/02_baseline_tfidf_logistic_regression.ipynb</code></li>
+<li><code>notebooks/03_embeddings_logistic_regression.ipynb</code></li>
+<li>Serialized artifacts: <code>data/models/embedding_category_lr.joblib</code>, <code>data/models/embedding_priority_lr.joblib</code>, <code>data/models/label_encoders.joblib</code>.</li>
+<li>Experiment log table comparing TF-IDF vs Dense Embeddings.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Category classifier achieves (\ge 0.75) Macro-F1 on the test set.</li>
+<li>[ ] Priority classifier achieves (\ge 0.65) Macro-F1 on the test set.</li>
+<li>[ ] Embedding-based classifier matches or outperforms the TF-IDF baseline.</li>
+<li>[ ] Confusion matrices generated and analyzed for systematic confusion (e.g. Medium vs High priority).</li>
+<li>[ ] Serialized <code>.joblib</code> models can be loaded into a clean Python session and produce predictions on raw strings in (&lt; 25\text{ ms}).</li>
+</ul>
+<hr />
+<h3>Phase 2: Vector Search &amp; Grounded Retrieval with pgvector</h3>
+<p><em>Estimated Timeline: Days 7 – 12</em></p>
+<h4>Goal</h4>
+<p>Set up Supabase PostgreSQL with the <code>pgvector</code> extension, batch-index ticket embeddings, and build an explainable similarity search pipeline evaluated on a held-out benchmark.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Database Vector Initialization</strong>:<br />
+   - Enable <code>vector</code> extension in Supabase PostgreSQL instance.<br />
+   - Define table schema for <code>tickets</code> with column <code>embedding vector(384)</code>.<br />
+   - Create an HNSW index using cosine distance: <code>USING hnsw (embedding vector_cosine_ops)</code>.</li>
+<li><strong>Batch Ingestion Script</strong>:<br />
+   - Write a standalone Python script <code>scripts/ingest_historical_tickets.py</code> to embed historical resolved tickets and bulk-insert them into Supabase via SQLAlchemy.</li>
+<li><strong>Similarity Search Implementation</strong>:<br />
+   - Write SQL queries computing Cosine Similarity from Cosine Distance:<br />
+     [<br />
+     \text{Cosine Similarity} = 1 - (\mathbf{u} \cdot \mathbf{v}) = 1 - (\text{embedding} \Leftrightarrow \text{query_vector})<br />
+     ]<br />
+   - Implement filtering by <code>status = 'Resolved'</code> and similarity thresholding ((\ge 0.65)).</li>
+<li><strong>Retrieval Evaluation (Hit@3 Benchmark)</strong>:<br />
+   - Run retrieval against the 100 held-out evaluation tickets.<br />
+   - For each evaluation ticket, retrieve top-3 similar tickets.<br />
+   - Compute <strong>Hit@3</strong>: percentage of queries where at least one of the top-3 retrieved tickets addresses the same root cause category.</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li><code>notebooks/04_pgvector_retrieval_and_eval.ipynb</code></li>
+<li><code>scripts/ingest_historical_tickets.py</code></li>
+<li>Supabase SQL schema migration script.</li>
+<li>Retrieval evaluation report documenting Hit@3 and average query latency.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Supabase table populated with (\ge 1,000) embedded historical tickets.</li>
+<li>[ ] HNSW vector index active and functional.</li>
+<li>[ ] Retrieval query latency (&lt; 100\text{ ms}) for top-3 nearest neighbors.</li>
+<li>[ ] Hit@3 metric on the 100-ticket held-out set achieves (\ge 80\%).</li>
+</ul>
+<hr />
+<h3>Phase 3: RAG Resolution Chain &amp; Core FastAPI Service (MVP Completion)</h3>
+<p><em>Estimated Timeline: Days 13 – 18</em></p>
+<h4>Goal</h4>
+<p>Build the LangChain-orchestrated RAG resolution pipeline with Google Gemini 1.5 Flash and wrap the entire system in a production-ready FastAPI application with JWT RBAC.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>LangChain Grounded Resolution Chain</strong>:<br />
+   - Create a clean wrapper for Google Gemini 1.5 Flash using <code>langchain-google-genai</code>.<br />
+   - Write a strict prompt template enforcing <strong>grounded generation</strong>: the model must ONLY generate recommendations derived from the retrieved historical resolutions.<br />
+   - Enforce Pydantic structured output (<code>with_structured_output</code>) returning:<ul>
+<li><code>suggested_fix</code>: Step-by-step guidance.</li>
+<li><code>sources</code>: Array of ticket IDs used as evidence.</li>
+<li><code>confidence_note</code>: Brief justification.</li>
+</ul>
+</li>
+<li><strong>FastAPI Application Architecture</strong>:<br />
+   - Implement application layout (<code>app/api</code>, <code>app/models</code>, <code>app/schemas</code>, <code>app/services</code>).<br />
+   - Implement JWT authentication with role-based access control (<code>user</code>, <code>agent</code>, <code>admin</code>).</li>
+<li><strong>Endpoint Development</strong>:<br />
+   - <code>POST /api/v1/auth/login</code>, <code>POST /api/v1/auth/register</code><br />
+   - <code>POST /api/v1/tickets</code> (Auto-triages category and priority upon creation).<br />
+   - <code>GET /api/v1/tickets</code>, <code>GET /api/v1/tickets/{id}</code>, <code>PATCH /api/v1/tickets/{id}</code><br />
+   - <code>POST /api/v1/ml/predict</code> (Standalone prediction without saving).<br />
+   - <code>POST /api/v1/ml/similar</code> (Top-K duplicate/similar search).<br />
+   - <code>POST /api/v1/ml/suggest</code> (Top-3 retrieval + Gemini structured RAG resolution).</li>
+<li><strong>Automated Testing Suite</strong>:<br />
+   - Write unit and integration tests using <code>pytest</code> and <code>httpx.AsyncClient</code>.<br />
+   - Mock external Gemini API calls in test suite to ensure deterministic, zero-cost CI testing.</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li>Complete backend codebase in <code>backend/app/</code>.</li>
+<li>Alembic database migration scripts.</li>
+<li>Pytest test suite in <code>backend/tests/</code> covering Auth, CRUD, ML inference, and RAG chains.</li>
+<li>Interactive Swagger documentation accessible at <code>/docs</code>.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] <strong>Full MVP Works End-to-End</strong>: A user can create a ticket via API, the system auto-assigns category/priority, and an agent can call <code>/suggest</code> to receive a validated JSON resolution grounded in top-3 historical tickets.</li>
+<li>[ ] All Pytest unit and integration tests pass with 100% green status.</li>
+<li>[ ] RAG endpoint returns HTTP 422 or fallback response if no historical tickets exceed the 0.65 similarity threshold (no ungrounded hallucination).</li>
+<li>[ ] RBAC enforcement verified: Standard <code>user</code> cannot access agent-only resolution endpoints.</li>
+</ul>
+<hr />
+<h3>Phase 4: Flutter Web Agent Dashboard</h3>
+<p><em>Estimated Timeline: Days 19 – 23</em></p>
+<h4>Goal</h4>
+<p>Build a clean, responsive Flutter Web dashboard for IT support agents to triage incoming tickets, inspect similarity search results, and accept AI-generated resolution suggestions.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Flutter Web Project Setup</strong>:<br />
+   - Initialize Flutter Web project in <code>frontend/ticketiq_dashboard/</code>.<br />
+   - Configure HTTP client service with secure JWT token storage (via <code>shared_preferences</code> or browser storage).</li>
+<li><strong>Authentication &amp; Queue Management</strong>:<br />
+   - Build Login &amp; Registration screen.<br />
+   - Build Support Queue Dashboard: tabular or card view of open tickets with filter chips (Status, Priority, Category).</li>
+<li><strong>Ticket Detail &amp; Triage View</strong>:<br />
+   - Display ticket title, description, requester, and timestamps.<br />
+   - Show "AI Predicted Triage" badge with confidence level. Allow agent to override if needed.</li>
+<li><strong>Interactive AI Assistance Panel</strong>:<br />
+   - "Similar Tickets" tab displaying top-3 historical matches with similarity percentage and resolution notes.<br />
+   - "Generate Resolution" button that triggers <code>POST /suggest</code> and displays the structured fix with citations.<br />
+   - "Insert into Resolution Notes" button that copies the AI fix into the ticket's resolution field and marks status as "Resolved".</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li>Complete Flutter Web application in <code>frontend/ticketiq_dashboard/</code>.</li>
+<li>Production web bundle build (<code>flutter build web --release</code>).</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Agent can log in, view live tickets from FastAPI backend, and filter by priority/status.</li>
+<li>[ ] Ticket detail screen displays auto-triage category and priority badges.</li>
+<li>[ ] Clicking "Generate Resolution" triggers RAG chain and renders structured steps with source ticket links within (&lt; 3\text{ seconds}).</li>
+<li>[ ] One-click action allows agent to approve/edit the AI fix and update ticket to "Resolved".</li>
+</ul>
+<hr />
+<h3>Phase 5: Testing, Hardening &amp; Cloud Deployment</h3>
+<p><em>Estimated Timeline: Days 24 – 28</em></p>
+<h4>Goal</h4>
+<p>Containerize the FastAPI backend, configure connection pooling on Supabase, deploy backend and frontend to Render, and verify live performance and stability.</p>
+<h4>Tasks</h4>
+<ol>
+<li><strong>Containerization &amp; Optimization</strong>:<br />
+   - Write a multi-stage <code>Dockerfile</code> for FastAPI that downloads <code>all-MiniLM-L6-v2</code> during Docker build to eliminate runtime download delays.<br />
+   - Configure production server using <code>uvicorn</code> with multiple workers.</li>
+<li><strong>Supabase Production Configuration</strong>:<br />
+   - Configure Supabase Connection Pooler (Transaction Mode / PgBouncer on port 6543) to prevent connection exhaustion on free tiers.</li>
+<li><strong>Render Deployment</strong>:<br />
+   - Deploy FastAPI backend as a Render Web Service.<br />
+   - Configure environment variables (<code>DATABASE_URL</code>, <code>GEMINI_API_KEY</code>, <code>JWT_SECRET_KEY</code>).<br />
+   - Host Flutter Web build (via Render Static Site, Vercel, or GitHub Pages).</li>
+<li><strong>End-to-End Verification &amp; Documentation</strong>:<br />
+   - Run smoke tests against live public URL.<br />
+   - Measure live response latencies:<ul>
+<li><code>/predict</code>: (&lt; 50\text{ ms})</li>
+<li><code>/similar</code>: (&lt; 120\text{ ms})</li>
+<li><code>/suggest</code>: (&lt; 2.5\text{ s}) (including Gemini generation)</li>
+<li>Finalize project README with architectural diagrams, API docs, and demo video/GIF.</li>
+</ul>
+</li>
+</ol>
+<h4>Deliverables</h4>
+<ul>
+<li>Production <code>Dockerfile</code> and <code>docker-compose.yml</code>.</li>
+<li>Live, publicly accessible backend on Render and database on Supabase.</li>
+<li>Live hosted Flutter Web dashboard.</li>
+<li>Verification test run report documenting latencies and uptime.</li>
+</ul>
+<h4>Acceptance Criteria</h4>
+<ul>
+<li>[ ] Public HTTPS API responds successfully to health check <code>GET /health</code>.</li>
+<li>[ ] Live Flutter Web UI communicates seamlessly with Render backend with zero CORS issues.</li>
+<li>[ ] Database queries utilize HNSW index without exceeding Supabase free-tier RAM limits.</li>
+<li>[ ] End-to-end user story works on production: Create Ticket (\to) Auto-Triage (\to) Similar Search (\to) AI Suggest (\to) Resolve Ticket.</li>
+</ul>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>

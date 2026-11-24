@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Risks & Mitigations — TicketIQ</title>
+  
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    });
+  </script>
+
+  <style>
+
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --bg-card: #f8fafc;
+  --border-color: #e2e8f0;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-main);
+  background: #ffffff;
+  margin: 0;
+  padding: 40px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1e1b4b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+h1 {
+  font-size: 2.1rem;
+  border-bottom: 2px solid #e0e7ff;
+  padding-bottom: 0.3em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.55rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.25em;
+}
+
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.05rem; }
+
+p { margin: 0.9em 0; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover { text-decoration: underline; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.4em 0;
+  font-size: 0.93rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f8fafc;
+  padding: 10px 18px;
+  margin: 1.2em 0;
+  border-radius: 0 8px 8px 0;
+  color: #334155;
+  font-style: normal;
+}
+
+blockquote p { margin: 0.4em 0; }
+
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border: 1px solid #1e293b;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: #f1f5f9;
+  color: #be123c;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mermaid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+ul, ol {
+  padding-left: 26px;
+  margin: 0.8em 0;
+}
+
+li { margin-bottom: 0.35em; }
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-right: 6px;
+}
+
+.header-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+.header-banner h1 {
+  color: #ffffff;
+  border: 0;
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+}
+.header-banner p {
+  color: #c7d2fe;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.cover-page {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  page-break-after: always;
+}
+.cover-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+.cover-subtitle {
+  font-size: 1.4rem;
+  color: #4f46e5;
+  margin-bottom: 24px;
+  max-width: 650px;
+}
+.cover-meta {
+  font-size: 1rem;
+  color: #64748b;
+  margin-top: 40px;
+  line-height: 1.8;
+}
+
+@page {
+  size: A4;
+  margin: 16mm 18mm 16mm 18mm;
+}
+
+@media print {
+  body {
+    max-width: 100%;
+    padding: 0;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  h1 { font-size: 1.7rem; margin-top: 1.2em; }
+  h2 { font-size: 1.3rem; margin-top: 1.1em; }
+  h3 { font-size: 1.1rem; }
+  h1, h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote, .mermaid { page-break-inside: avoid; }
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+}
+
+  </style>
+</head>
+<body>
+  <h1>TicketIQ — Production Risks &amp; Mitigation Strategies</h1>
+<p>This document identifies the 5 primary risks in building TicketIQ — spanning dataset quality, statistical class imbalance, LLM hallucinations, free-tier limits, and vector dimensional integrity — alongside concrete engineering mitigations.</p>
+<hr />
+<h2>Risk Matrix Summary</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">#</th>
+<th style="text-align: left;">Risk Area</th>
+<th style="text-align: left;">Severity</th>
+<th style="text-align: left;">Likelihood</th>
+<th style="text-align: left;">Key Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;"><strong>Dataset Quality &amp; Noisy Resolutions</strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">Strict data cleaning pipeline: length thresholding &amp; removal of boilerplate resolutions</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;"><strong>Class Imbalance in Category &amp; Priority</strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">Stratified train/test splitting, <code>class_weight='balanced'</code>, and Macro-F1 evaluation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;"><strong>LLM Hallucination in Technical Fixes</strong></td>
+<td style="text-align: left;">Critical</td>
+<td style="text-align: left;">Medium</td>
+<td style="text-align: left;">Similarity gating ((\ge 0.65)), strict prompt grounding, and Pydantic structured output</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4</strong></td>
+<td style="text-align: left;"><strong>Free-Tier API &amp; Cloud Rate Limits</strong></td>
+<td style="text-align: left;">Medium</td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">In-memory LRU caching, Supabase transaction pooling, and graceful backoff</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>5</strong></td>
+<td style="text-align: left;"><strong>Vector Dimension &amp; Distance Metric Mismatch</strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;">Low</td>
+<td style="text-align: left;">Explicit DDL constraints (<code>vector(384)</code>), (L_2) normalization, and cosine distance <code>&lt;=&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Detailed Risk Analysis &amp; Mitigations</h2>
+<h3>1. Dataset Quality &amp; Missing Ticket Resolution Text</h3>
+<h4>The Risk</h4>
+<p>Public IT support datasets from Kaggle often contain incomplete rows, placeholder descriptions (<em>"Help, my screen is blue"</em>), or meaningless resolution notes (<em>"Resolved by user"</em>, <em>"Issue closed"</em>, <em>"N/A"</em>). If these low-quality records are indexed in the vector store, similarity searches will retrieve irrelevant records, and the RAG model will generate useless or corrupt recommendations.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Resolution Quality Filter</strong>:<br />
+   - In Day 2 preprocessing, discard any historical ticket where <code>resolution_notes</code> is null, has fewer than 25 characters, or matches common boilerplate regexes:<br />
+<code>python
+     boilerplate_patterns = [r"^resolved", r"^fixed", r"^closed", r"^ticket closed", r"^n/a$"]</code></li>
+<li><strong>Text Normalization Pipeline</strong>:<br />
+   - Clean both titles and descriptions: strip HTML tags, normalize whitespace, lowercase text, and remove non-informative ticket IDs or automated email headers.</li>
+<li><strong>Curated Historical Index</strong>:<br />
+   - Only index tickets marked with <code>status = 'Resolved'</code> that have verified, substantive resolution notes.</li>
+</ol>
+<hr />
+<h3>2. Severe Class Imbalance (Category &amp; Priority)</h3>
+<h4>The Risk</h4>
+<p>In real helpdesk data, categories and priorities are heavily skewed:<br />
+- Priorities: ~65% <em>Low</em>, ~25% <em>Medium</em>, ~8% <em>High</em>, ~2% <em>Critical</em>.<br />
+- Categories: ~50% <em>Software</em>, ~30% <em>Hardware</em>, ~15% <em>Network</em>, ~5% <em>Access</em>.</p>
+<p>A standard classifier optimizing for naive accuracy will predict the majority class (<em>Low</em> / <em>Software</em>) for all tickets, achieving ~65% accuracy while completely failing on <em>Critical</em> or <em>Access</em> tickets.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Stratified Splitting</strong>:<br />
+   - Use <code>StratifiedShuffleSplit</code> in Scikit-Learn to ensure that train and test partitions maintain identical class distributions for both Category and Priority.</li>
+<li><strong>Class-Weighted Loss Optimization</strong>:<br />
+   - Configure Scikit-Learn's <code>LogisticRegression(class_weight='balanced')</code>. This automatically adjusts weights inversely proportional to class frequencies:<br />
+     [<br />
+     w_j = \frac{N}{K \cdot n_j}<br />
+     ]<br />
+     where (N) is total samples, (K) is number of classes, and (n_j) is the sample count of class (j). Errors on minority classes (<em>Critical</em>) are penalized far more heavily during gradient descent.</li>
+<li><strong>Metric Alignment</strong>:<br />
+   - Reject accuracy as a primary metric. Use <strong>Macro-averaged F1 Score</strong>, which computes the arithmetic mean of F1 scores across each class independently, treating minority and majority classes with equal weight.</li>
+</ol>
+<hr />
+<h3>3. LLM Hallucination &amp; Ungrounded Resolutions</h3>
+<h4>The Risk</h4>
+<p>LLMs given loose prompts will attempt to be helpful by inventing IT procedures, non-existent terminal commands, or insecure password reset links. In an IT enterprise setting, an invented or incorrect command can cause system downtime or data loss.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Similarity Score Gating (Pre-LLM Guardrail)</strong>:<br />
+   - Before invoking Gemini, inspect the cosine similarity score of the top retrieved historical ticket.<br />
+   - If <code>top_similarity &lt; 0.65</code>, do <strong>not</strong> invoke the LLM. Immediately return a deterministic fallback response:<br />
+<code>json
+     {
+       "suggested_fix": "No sufficiently similar historical resolution found (similarity &lt; 0.65). Please escalate this ticket to a Tier-2 IT Specialist.",
+       "sources": [],
+       "confidence_note": "Below automated resolution threshold."
+     }</code></li>
+<li><strong>Strict Grounding Prompt Template</strong>:<br />
+   - Instruct the LLM that it is an administrative assistant summarizing verified records, strictly forbidding external facts:<br />
+<code>text
+     You are an IT resolution assistant. You are provided with 3 historically resolved tickets.
+     Synthesize a clear, step-by-step fix ONLY using the historical resolutions provided.
+     Do NOT add outside knowledge, do NOT invent commands, and do NOT assume software versions.
+     If the provided resolutions do not clearly solve the user's issue, state: "Historical data is insufficient to resolve this issue."</code></li>
+<li><strong>Structured Pydantic Enforcement</strong>:<br />
+   - Use <code>with_structured_output</code> to require the LLM to return source ticket IDs in the <code>sources</code> field. If the model cannot cite an ID from the context, the response is rejected.</li>
+</ol>
+<hr />
+<h3>4. Free-Tier API Rate Limits &amp; Cloud Resource Constraints</h3>
+<h4>The Risk</h4>
+<ul>
+<li><strong>Google Gemini API</strong>: Free tier enforces a strict limit of 15 Requests Per Minute (RPM). Rapid testing or multi-user interaction can trigger HTTP 429 errors.</li>
+<li><strong>Supabase Free Tier</strong>: Free compute allows limited concurrent direct database connections (often 60 pooler / direct connections).</li>
+<li><strong>Render Web Service Free Tier</strong>: Free web services spin down after 15 minutes of inactivity, resulting in a 30–50 second cold start delay.</li>
+</ul>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>In-Memory Embedding Caching</strong>:<br />
+   - Implement an LRU cache (<code>@lru_cache(maxsize=1024)</code>) in the embedding service so repetitive queries (e.g. duplicate search terms) return cached 384-dim vectors without recomputing.</li>
+<li><strong>Local Model Inference</strong>:<br />
+   - All classification (<code>LogisticRegression</code>) and sentence encoding (<code>all-MiniLM-L6-v2</code>) runs locally on the CPU in Python. No external API quotas are consumed for classification or vector generation.</li>
+<li><strong>Exponential Backoff for Gemini Calls</strong>:<br />
+   - Wrap the LangChain Gemini call with retry logic (using <code>tenacity</code>) that handles HTTP 429 rate limits gracefully with exponential backoff and jitter.</li>
+<li><strong>Supabase Connection Pooling (Transaction Mode)</strong>:<br />
+   - Direct all backend database queries through Supabase PgBouncer (port 6543) instead of direct port 5432. This reuses database connections across stateless FastAPI requests.</li>
+</ol>
+<hr />
+<h3>5. Vector Dimension &amp; Distance Metric Mismatch</h3>
+<h4>The Risk</h4>
+<p>A common defect in vector applications is initializing the database column with the wrong dimension (e.g. <code>vector(1536)</code> intended for OpenAI models instead of <code>vector(384)</code> for <code>all-MiniLM-L6-v2</code>), or querying with Euclidean distance (<code>&lt;-&gt;</code>) when the vectors are compared using cosine similarity.</p>
+<h4>Engineering Mitigations</h4>
+<ol>
+<li><strong>Explicit Schema Typing</strong>:<br />
+   - Define the PostgreSQL column strictly as <code>embedding vector(384)</code> in Alembic migrations.</li>
+<li><strong>Vector Normalization</strong>:<br />
+   - Ensure <code>sentence-transformers</code> generates (L_2)-normalized vectors:<br />
+<code>python
+     model.encode(text, normalize_embeddings=True)</code><br />
+   - When vectors have unit length ((|\mathbf{u}|_2 = 1)), Cosine Distance is directly proportional to Euclidean distance:<br />
+     [<br />
+     |\mathbf{u} - \mathbf{v}|_2^2 = 2(1 - \mathbf{u} \cdot \mathbf{v})<br />
+     ]</li>
+<li><strong>Dedicated Unit Tests</strong>:<br />
+   - Include an automated Pytest verifying that the vector output of <code>encoder.py</code> always returns an array of shape <code>(384,)</code> with unit magnitude before inserting into the database.</li>
+</ol>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>
